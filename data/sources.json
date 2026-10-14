@@ -12,6 +12,55 @@
     "date": "5 ноября 2025 г."
   },
   {
+    "id": "zakon_protivodeystvie_korrupcii",
+    "type": "law",
+    "adilet": "Z1500000410",
+    "title_ru": "Закон РК «О противодействии коррупции»",
+    "title_kk": "«Сыбайлас жемқорлыққа қарсы іс-қимыл туралы» ҚР Заңы"
+  },
+  {
+    "id": "koncepciya_antikorrupcionnoy_politiki_2022_2026",
+    "type": "decree",
+    "adilet": "U2200000802",
+    "title_ru": "Концепция антикоррупционной политики РК на 2022–2026 годы (Указ № 802)",
+    "title_kk": "ҚР сыбайлас жемқорлыққа қарсы саясатының 2022–2026 жылдарға арналған тұжырымдамасы (№ 802 Жарлық)"
+  },
+  {
+    "id": "zakon_obshchestvennyy_kontrol",
+    "type": "law",
+    "adilet": "Z2300000030",
+    "title_ru": "Закон РК «Об общественном контроле»",
+    "title_kk": "«Қоғамдық бақылау туралы» ҚР Заңы"
+  },
+  {
+    "id": "zakon_dostup_k_informacii",
+    "type": "law",
+    "adilet": "Z1500000401",
+    "title_ru": "Закон РК «О доступе к информации»",
+    "title_kk": "«Ақпаратқа қол жеткізу туралы» ҚР Заңы"
+  },
+  {
+    "id": "zakon_profilaktika_pravonarusheniy",
+    "type": "law",
+    "adilet": "Z2500000245",
+    "title_ru": "Закон РК «О профилактике правонарушений»",
+    "title_kk": "«Құқық бұзушылық профилактикасы туралы» ҚР Заңы"
+  },
+  {
+    "id": "zakon_gossluzhba_2026",
+    "type": "law",
+    "adilet": "Z2600000290",
+    "title_ru": "Закон РК «О государственной службе Республики Казахстан» (2026)",
+    "title_kk": "«Қазақстан Республикасының мемлекеттік қызметі туралы» ҚР Заңы (2026)"
+  },
+  {
+    "id": "eticheskiy_kodeks_gossluzhashchih",
+    "type": "decree",
+    "adilet": "U1500000153",
+    "title_ru": "Этический кодекс государственных служащих РК (Указ № 153)",
+    "title_kk": "ҚР мемлекеттік қызметшілерінің әдеп кодексі (№ 153 Жарлық)"
+  },
+  {
     "id": "poslanie_2025_ai",
     "type": "address",
     "url": "https://akorda.kz/ru/poslanie-glavy-gosudarstva-kasym-zhomarta-tokaeva-narodu-kazahstana-kazahstan-v-epohu-iskusstvennogo-intellekta-aktualnye-zadachi-i-ih-resheniya-cherez-cifrovuyu-transformaciyu-885145",

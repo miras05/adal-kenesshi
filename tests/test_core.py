@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 
 from app import llm, prompts, service
-from app.rag.chunker import chunk_constitution, chunk_generic
+from app.rag.chunker import chunk_constitution, chunk_generic, chunk_law
 from app.rag.retriever import Hit, Retriever, detect_lang, tokenize
 from app.security import RateLimiter, ValidationError, clean_question, looks_like_injection
 
@@ -224,3 +224,16 @@ def test_daily_budget_limit(monkeypatch, no_db):
     monkeypatch.setattr(service.db, "llm_calls_last_24h", lambda: 10**6)
     events = run(service.answer("Вопрос?"))
     assert events[-1]["type"] == "error" and events[-1]["code"] == "daily_limit"
+
+
+def test_law_split_by_articles_with_chapters():
+    law = {"id": "z", "type": "law", "lang": "ru", "title": "Закон", "date": "", "url": "u",
+           "text": "Настоящий Закон регулирует...\nГлава 1. ОБЩИЕ ПОЛОЖЕНИЯ\n"
+                   "Статья 1. Основные понятия\n1) коррупция – ...\n"
+                   "Статья 1-1. Дополнение\nТекст\nГлава 2. МЕРЫ\nСтатья 2. Меры\nТекст 2"}
+    chunks = chunk_law(law)
+    assert [(c.article, c.section) for c in chunks] == [
+        ("", ""), ("1", "Глава 1. ОБЩИЕ ПОЛОЖЕНИЯ"), ("1-1", "Глава 1. ОБЩИЕ ПОЛОЖЕНИЯ"), ("2", "Глава 2. МЕРЫ")]
+    assert chunks[1].text.startswith("Статья 1. Основные понятия")
+    kk = {**law, "lang": "kk", "text": "1-тарау. ЖАЛПЫ ЕРЕЖЕЛЕР\n1-бап. Негізгі ұғымдар\nМәтін\n2-1-бап. Қосымша\nМәтін"}
+    assert [c.article for c in chunk_law(kk)] == ["1", "2-1"]

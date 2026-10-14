@@ -1,6 +1,6 @@
 """Нарезка документов на фрагменты (chunks) для поиска.
 
-- Конституция режется по статьям: так бот может точно сослаться на «Статью N».
+- Конституция и законы режутся по статьям: так бот может точно сослаться на «Статью N».
 - Остальные документы режутся по абзацам в блоки ~CHUNK_SIZE символов
   с перекрытием в один абзац, чтобы не терять контекст на границе.
 """
@@ -11,6 +11,9 @@ CHUNK_SIZE = 1200
 MAX_ARTICLE = 2500
 
 ARTICLE_RE = re.compile(r"^(?:Статья\s+(\d+)|(\d+)-бап)\s*$")
+# Законы: «Статья 1-1. Название» / «1-1-бап. Атауы»; главы: «Глава 2. …» / «2-тарау. …»
+LAW_ARTICLE_RE = re.compile(r"^(?:Статья\s+(\d+(?:-\d+)?)\.|(\d+(?:-\d+)?)-бап\.)\s*(.*)$")
+LAW_CHAPTER_RE = re.compile(r"^(?:Глава\s+\d+(?:-\d+)?\.?|\d+(?:-\d+)?-тарау\.?)\s*.*$")
 SECTION_RE = re.compile(r"^(?:Раздел\s+[IVXLІ]+|[IVXLІ]+\s+бөлім)\s*$")
 
 
@@ -96,6 +99,45 @@ def chunk_constitution(doc: dict) -> list[Chunk]:
     return chunks
 
 
+def chunk_law(doc: dict) -> list[Chunk]:
+    """Закон: фрагмент = статья (длинные статьи делятся, заголовок статьи повторяется)."""
+    lines = [l.strip() for l in doc["text"].split("\n") if l.strip()]
+    chunks: list[Chunk] = []
+    chapter, art_no, heading, body, intro = "", None, "", [], []
+
+    def flush():
+        if art_no is None:
+            return
+        for i, part in enumerate(_split_long("\n".join(body), MAX_ARTICLE)):
+            text = part if i == 0 else f"{heading}\n{part}"
+            chunks.append(Chunk(
+                id=f"{doc['id']}.{doc['lang']}.art{art_no}.{i}",
+                doc_id=doc["id"], lang=doc["lang"], type=doc["type"],
+                title=doc["title"], date=doc["date"], url=doc["url"],
+                text=text, article=art_no, section=chapter,
+            ))
+
+    for line in lines:
+        if LAW_CHAPTER_RE.match(line):
+            flush()
+            art_no, body = None, []
+            chapter = line
+            continue
+        m = LAW_ARTICLE_RE.match(line)
+        if m:
+            flush()
+            art_no = m.group(1) or m.group(2)
+            heading, body = line, [line]
+            continue
+        (body if art_no is not None else intro).append(line)
+    flush()
+    if intro:  # преамбула закона до первой статьи
+        for i, part in enumerate(_split_long("\n".join(intro), CHUNK_SIZE)):
+            chunks.insert(i, Chunk(id=f"{doc['id']}.{doc['lang']}.intro.{i}", doc_id=doc["id"], lang=doc["lang"],
+                                   type=doc["type"], title=doc["title"], date=doc["date"], url=doc["url"], text=part))
+    return chunks
+
+
 def chunk_generic(doc: dict) -> list[Chunk]:
     return [
         Chunk(
@@ -110,4 +152,6 @@ def chunk_generic(doc: dict) -> list[Chunk]:
 def chunk_document(doc: dict) -> list[Chunk]:
     if doc["type"] == "constitution":
         return chunk_constitution(doc)
+    if doc["type"] == "law":
+        return chunk_law(doc)
     return chunk_generic(doc)

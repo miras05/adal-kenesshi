@@ -1,7 +1,12 @@
 """Скачивает официальные документы из data/sources.json (RU + KZ версии)
 и сохраняет очищенный текст в data/corpus/<id>.<lang>.json.
 
-Запуск:  python -m scripts.fetch_sources
+Два вида источников:
+- akorda.kz — страницы сайта Президента (Конституция, Послания, выступления);
+- adilet.zan.kz — ИПС «Әділет» Минюста (законы и указы в действующей редакции).
+  Акты, утратившие силу, автоматически отклоняются.
+
+Запуск:  python -m scripts.fetch_sources [id ...]
 """
 import json
 import re
@@ -62,12 +67,60 @@ def fetch(client: httpx.Client, url: str) -> str:
     return r.text
 
 
+ADILET_API = "https://adilet.zan.kz/api/documents/by-ngr/{code}"
+ADILET_LANG = {"ru": "rus", "kk": "kaz"}
+# Служебные пометки «Әділет» (примечания, сноски об изменениях) — не часть текста акта
+ADILET_NOTE_RE = re.compile(
+    r"^(Примечание\s+(РЦПИ|ИЗПИ)|Вниманию пользователей|Сноска\.|ЗҚАИ-ның ескертпесі|РҚАО-ның ескертпесі"
+    r"|Пайдаланушылардың назарына|Ескерту\.|Порядок введения в действие|Осы Заңның қолданысқа енгізілу тәртібін"
+    r"|Для удобства пользования|Пайдаланудың ыңғайлылығы)", re.IGNORECASE)
+
+
+class NotActual(Exception):
+    pass
+
+
+def fetch_adilet(client: httpx.Client, src: dict, lang: str) -> dict:
+    r = client.get(ADILET_API.format(code=src["adilet"]), params={"language": ADILET_LANG[lang]}, timeout=60)
+    r.raise_for_status()
+    d = json.loads(r.text, strict=False)["document"]
+    # Только действующие акты: утратившие силу дают недостоверную информацию
+    if not d.get("is_actual") or d.get("status") == "yts" or "Утратил силу" in (d.get("official_name") or ""):
+        raise NotActual(d.get("official_name", "утратил силу"))
+    soup = BeautifulSoup(d["text_content"], "html.parser")
+    for n in soup.select(".note"):
+        n.decompose()
+    lines = [l.strip() for l in soup.get_text("\n", strip=True).split("\n")]
+    text = "\n".join(l for l in lines if l and not ADILET_NOTE_RE.match(l))
+    name = d.get("title_ru") or ""  # у казахской версии здесь название на казахском
+    title = src.get(f"title_{lang}") or name
+    lang_path = ADILET_LANG[lang]
+    return {"title": title, "text": text, "date": d.get("official_name") or "",
+            "url": f"https://adilet.zan.kz/{lang_path}/docs/{src['adilet']}"}
+
+
 def main(only: set[str] | None = None) -> None:
     CORPUS.mkdir(parents=True, exist_ok=True)
     sources = json.loads(SOURCES.read_text(encoding="utf-8"))
     with httpx.Client(headers={"User-Agent": UA}) as client:
         for src in sources:
             if only and src["id"] not in only:
+                continue
+            if "adilet" in src:
+                for lang in ("ru", "kk"):
+                    try:
+                        page = fetch_adilet(client, src, lang)
+                    except NotActual as e:
+                        print(f"  ✗ {src['id']}.{lang}: УТРАТИЛ СИЛУ — пропускаем ({e})")
+                        continue
+                    except Exception as e:
+                        print(f"  ✗ {src['id']}.{lang}: {e}")
+                        continue
+                    doc = {"id": src["id"], "type": src["type"], "lang": lang, **page}
+                    (CORPUS / f"{src['id']}.{lang}.json").write_text(
+                        json.dumps(doc, ensure_ascii=False, indent=1), encoding="utf-8")
+                    print(f"  ✓ {src['id']}.{lang}: {len(page['text']):>7} симв. | {page['title'][:70]}")
+                    time.sleep(0.5)
                 continue
             urls = {"ru": src["url"]}
             for lang in ("ru", "kk"):

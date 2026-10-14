@@ -172,7 +172,9 @@ async def leaderboard():
 
 @app.get("/api/health")
 async def health():
-    return {"status": "ok", "chunks": len(service.get_retriever().chunks), "model": config.LLM_MODEL}
+    chunks = service.get_retriever().chunks
+    return {"status": "ok", "chunks": len(chunks), "documents": len({c["doc_id"] for c in chunks}),
+            "model": config.LLM_MODEL}
 
 
 @app.get("/api/stats")

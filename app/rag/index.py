@@ -64,11 +64,27 @@ def load_corpus() -> list[Chunk]:
 
 
 def build() -> None:
+    """Инкрементальная сборка: векторы уже проиндексированных фрагментов (тот же id
+    и тот же текст) берутся из старого индекса, модель считает только новые."""
     t0 = time.time()
     chunks = load_corpus()
     print(f"Фрагментов: {len(chunks)} из {len(list(config.CORPUS_DIR.glob('*.json')))} документов")
     texts = [f"{chunk_header(c)}\n{c.text}" for c in chunks]
-    emb = embed_passages(texts)
+    cache: dict[tuple[str, str], np.ndarray] = {}
+    if (config.INDEX_DIR / "chunks.json").exists():
+        old_chunks, old_emb = load()
+        cache = {(c["id"], f"{chunk_header(c)}\n{c['text']}"): old_emb[i] for i, c in enumerate(old_chunks)}
+    todo = [i for i, c in enumerate(chunks) if (c.id, texts[i]) not in cache]
+    print(f"Из кэша: {len(chunks) - len(todo)}, нужно посчитать: {len(todo)}")
+    emb = np.zeros((len(chunks), 1024 if not cache else len(next(iter(cache.values())))), dtype=np.float32)
+    for i, c in enumerate(chunks):
+        if (c.id, texts[i]) in cache:
+            emb[i] = cache[(c.id, texts[i])]
+    if todo:
+        new = embed_passages([texts[i] for i in todo])
+        if emb.shape[1] != new.shape[1]:
+            emb = np.zeros((len(chunks), new.shape[1]), dtype=np.float32)
+        emb[todo] = new
     config.INDEX_DIR.mkdir(parents=True, exist_ok=True)
     np.save(config.INDEX_DIR / "embeddings.npy", emb)
     (config.INDEX_DIR / "chunks.json").write_text(

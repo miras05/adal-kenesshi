@@ -8,12 +8,12 @@
 | Frontend (Telegram) | `bot/telegram_bot.py` | Тонкий клиент к API: «живое» редактирование сообщения, кнопки-источники, нативные викторины |
 | Backend API | `app/api.py` | Маршруты, валидация (Pydantic), rate-limit, CSP и др. заголовки, SSE |
 | Конвейер ответа | `app/service.py` | Оркестрация: валидация → переформулировка → поиск → порог → LLM → журнал |
-| RAG: нарезка | `app/rag/chunker.py` | Конституция — по статьям (с разделом), прочее — абзацные блоки ~1200 симв. с перекрытием |
-| RAG: индекс | `app/rag/index.py` | Эмбеддинги `multilingual-e5-large` (ONNX, локально), сохранение `embeddings.npy` + `chunks.json` |
+| RAG: нарезка | `app/rag/chunker.py` | Конституция и законы — по статьям (с разделом/главой), прочее — абзацные блоки ~1200 симв. с перекрытием |
+| RAG: индекс | `app/rag/index.py` | Эмбеддинги `multilingual-e5-large` (ONNX, локально), инкрементальная сборка (кэш векторов), `embeddings.npy` + `chunks.json` |
 | RAG: поиск | `app/rag/retriever.py` | Векторный + BM25 → Reciprocal Rank Fusion; разнообразие (≤3 фрагмента на документ); гарантированная проверка Конституции |
 | LLM | `app/llm.py`, `app/prompts.py` | Claude API: стриминг, обработка ошибок, fallback; системный промпт с правилами достоверности |
 | Database | `app/db.py` | SQLite: `queries`, `feedback`, `quiz_results`; агрегаты для аналитики |
-| Сбор данных | `scripts/fetch_sources.py` | Загрузка RU-страниц akorda.kz, автоматический поиск KZ-версий, очистка HTML |
+| Сбор данных | `scripts/fetch_sources.py` | akorda.kz (поиск KZ-версий) и ИПС «Әділет» (законы в действующей редакции, отсев утративших силу), очистка служебных примечаний |
 
 ## 2. Поток данных
 
@@ -79,8 +79,8 @@ quiz_results(id, ts, user_hash, nickname, score, total)
 
 ## 5. Расширение базы знаний
 
-1. Добавить запись в `data/sources.json` (`id`, `type`, `url` RU-страницы, `date`).
+1. Добавить запись в `data/sources.json`: для akorda.kz — `id`, `type`, `url` RU-страницы, `date`; для закона из «Әділет» — `id`, `type: "law"`, `adilet` (код документа, например `Z1500000410`), `title_ru`, `title_kk`.
 2. `python -m scripts.fetch_sources <id>` — скачает RU и найдёт KZ-версию.
-3. `python -m app.rag.index` — пересобрать индекс.
+3. `python -m app.rag.index` — пересобрать индекс (посчитаются только новые фрагменты).
 
 Вопросы, на которые бот не нашёл ответа, видны в `/admin` («что добавить в базу знаний») — это цикл улучшения базы на основе реальных запросов.
