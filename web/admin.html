@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Аналитика — Адал Кеңесші</title>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/admin.css">
+</head>
+<body>
+  <div class="sky" aria-hidden="true"><div class="aurora a1"></div><div class="aurora a2"></div><div class="stars"></div></div>
+  <header class="topbar">
+    <div class="brand">
+      <svg class="logo" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="30" fill="var(--sky)"/><circle cx="32" cy="27" r="10" fill="var(--gold)"/></svg>
+      <div><div class="brand-name">Аналитика</div><div class="brand-sub">Адал Кеңесші · панель администратора</div></div>
+    </div>
+    <a class="tab" href="/" style="margin-left:auto;text-decoration:none">← В чат</a>
+  </header>
+  <main class="admin">
+    <form id="login" class="login">
+      <p>Введите токен администратора (переменная <code>ADMIN_TOKEN</code> в .env):</p>
+      <input id="token" type="password" autocomplete="current-password" placeholder="ADMIN_TOKEN">
+      <button class="btn">Войти</button>
+      <p id="login-err" class="error-box"></p>
+    </form>
+    <div id="dash" hidden>
+      <div class="kpis" id="kpis"></div>
+      <div class="cards">
+        <section class="card wide"><h3>Запросы по дням (UTC+5)</h3><div id="by-day" class="bars"></div></section>
+        <section class="card"><h3>Языки</h3><div id="by-lang"></div></section>
+        <section class="card"><h3>Каналы</h3><div id="by-channel"></div></section>
+        <section class="card wide"><h3>Популярные вопросы</h3><ol id="top"></ol></section>
+        <section class="card wide"><h3>Вопросы без ответа — что добавить в базу знаний</h3><ul id="unanswered"></ul></section>
+      </div>
+    </div>
+  </main>
+  <script src="/static/admin.js"></script>
+</body>
+</html>

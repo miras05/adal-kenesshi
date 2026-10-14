@@ -1,0 +1,30 @@
+services:
+  api:
+    build: .
+    env_file: .env
+    environment:
+      DB_PATH: /app/state/app.db
+    volumes:
+      - state:/app/state
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health')"]
+      interval: 30s
+      start_period: 60s
+    restart: unless-stopped
+
+  telegram:
+    build: .
+    command: python -m bot.telegram_bot
+    env_file: .env
+    environment:
+      API_URL: http://api:8000
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    profiles: ["telegram"]   # запускается, если задан TELEGRAM_BOT_TOKEN: docker compose --profile telegram up
+
+volumes:
+  state:

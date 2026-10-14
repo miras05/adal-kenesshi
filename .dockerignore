@@ -1,0 +1,7 @@
+.venv
+.env
+data/models
+data/app.db
+__pycache__
+.pytest_cache
+.git

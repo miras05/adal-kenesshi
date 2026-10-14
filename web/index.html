@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Адал Кеңесші — AI-навигатор по внутренней политике РК</title>
+  <meta name="description" content="Интеллектуальный справочник по Конституции 2026, Посланиям и ценностям внутренней политики Казахстана. Ответы со ссылками на официальные источники, на казахском и русском.">
+  <meta name="theme-color" content="#071A21" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#EEF6F7" media="(prefers-color-scheme: light)">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2300A3C4'/%3E%3Ccircle cx='32' cy='32' r='15' fill='none' stroke='%23F5B800' stroke-width='4'/%3E%3Cpath d='M24 19v26M32 17v30M40 19v26M19 24h26M17 32h30M19 40h26' stroke='%23F5B800' stroke-width='2.4'/%3E%3C/svg%3E">
+</head>
+<body>
+  <!-- Фон: «небо над степью» -->
+  <div class="sky" aria-hidden="true">
+    <div class="aurora a1"></div><div class="aurora a2"></div><div class="aurora a3"></div>
+    <div class="stars"></div>
+    <div class="grain"></div>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Адал Кеңесші — на главную">
+      <span class="logo shanyrak-slot" data-size="logo"></span>
+      <span class="brand-text">
+        <span class="brand-name">Адал Кеңесші</span>
+        <span class="brand-sub" data-i18n="tagline">AI-навигатор по внутренней политике РК</span>
+      </span>
+    </a>
+    <nav class="tabs" role="tablist" aria-label="Разделы">
+      <span class="tab-ind" aria-hidden="true"></span>
+      <button class="tab active" role="tab" data-tab="chat"><span data-i18n="tab_chat">Чат</span></button>
+      <button class="tab" role="tab" data-tab="concepts"><span data-i18n="tab_concepts">Ценности</span></button>
+      <button class="tab" role="tab" data-tab="quiz"><span data-i18n="tab_quiz">Квиз</span></button>
+      <button class="tab" role="tab" data-tab="sources"><span data-i18n="tab_sources">Источники</span></button>
+    </nav>
+    <div class="controls">
+      <div class="seg lang-switch" role="group" aria-label="Язык / Тіл">
+        <span class="seg-knob" aria-hidden="true"></span>
+        <button data-lang="kk">ҚАЗ</button>
+        <button data-lang="ru" class="active">РУС</button>
+      </div>
+      <button id="theme" class="round-btn" type="button" aria-label="Тема оформления">
+        <svg class="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24"><path d="M20.5 14.6A8.5 8.5 0 0 1 9.4 3.5a8.5 8.5 0 1 0 11.1 11.1Z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== ЧАТ ===== -->
+    <section id="tab-chat" class="panel active" role="tabpanel">
+      <div id="messages" class="messages" aria-live="polite">
+        <div id="welcome" class="welcome">
+          <div class="orb-wrap">
+            <div class="orb-glow"></div>
+            <span class="orb shanyrak-slot" data-size="orb"></span>
+          </div>
+          <p class="eyebrow reveal" style="--d:1"><span class="dot"></span><span data-i18n="eyebrow">Конституция 2026 · Послания · Ценности</span></p>
+          <h1 class="hero-title reveal" style="--d:2">
+            <span data-i18n="hero1">Честные ответы</span>
+            <span class="grad" data-i18n="hero2">о главном в стране</span>
+          </h1>
+          <p class="hero-sub reveal" style="--d:3"><span data-i18n="hero_lead">Спросите, например:</span> <span id="typer" class="typer"></span><span class="caret" aria-hidden="true"></span></p>
+          <div class="stats reveal" style="--d:4">
+            <div class="stat"><b data-count="96">96</b><span data-i18n="stat1">статей Конституции</span></div>
+            <div class="stat"><b data-count="31">31</b><span data-i18n="stat2">официальный документ</span></div>
+            <div class="stat"><b data-count="1575">1575</b><span data-i18n="stat3">фрагментов в базе</span></div>
+            <div class="stat"><b>2</b><span data-i18n="stat4">языка: қазақша, русский</span></div>
+          </div>
+          <div id="suggestions" class="bento"></div>
+        </div>
+      </div>
+
+      <form id="chat-form" class="composer" autocomplete="off">
+        <div class="composer-inner">
+          <button type="button" id="mic" class="round-btn mic" aria-label="Голосовой ввод">
+            <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg>
+            <span class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
+          </button>
+          <textarea id="input" rows="1" maxlength="1000" aria-label="Ваш вопрос" data-i18n-ph="placeholder" placeholder="Спросите о Конституции, ценностях, Посланиях…"></textarea>
+          <button type="submit" id="send" class="send-btn" aria-label="Отправить">
+            <svg class="i-send" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+            <svg class="i-stop" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>
+          </button>
+        </div>
+      </form>
+      <p class="disclaimer" data-i18n="disclaimer">Бот не является государственным органом. Ответы формируются по официальным документам; для юридически значимых решений сверяйтесь с первоисточником.</p>
+    </section>
+
+    <!-- ===== ЦЕННОСТИ ===== -->
+    <section id="tab-concepts" class="panel" role="tabpanel">
+      <div class="panel-head">
+        <p class="eyebrow"><span class="dot"></span><span data-i18n="concepts_eyebrow">Указ № 1081 от 5 ноября 2025 г.</span></p>
+        <h2 data-i18n="concepts_title">Принципы и ценности внутренней политики</h2>
+        <p data-i18n="concepts_text">Отметка показывает, закреплено ли понятие в Конституции 2026 года.</p>
+      </div>
+      <div id="concepts" class="concept-grid"></div>
+    </section>
+
+    <!-- ===== КВИЗ ===== -->
+    <section id="tab-quiz" class="panel" role="tabpanel">
+      <div class="panel-head">
+        <p class="eyebrow"><span class="dot"></span><span data-i18n="quiz_eyebrow">Геймификация</span></p>
+        <h2 data-i18n="quiz_title">Квиз «Адал азамат»</h2>
+        <p data-i18n="quiz_text">7 вопросов по Конституции 2026 и ценностям внутренней политики. Каждый ответ — со ссылкой на документ.</p>
+      </div>
+      <div id="quiz" class="quiz"></div>
+    </section>
+
+    <!-- ===== ИСТОЧНИКИ ===== -->
+    <section id="tab-sources" class="panel" role="tabpanel">
+      <div class="panel-head">
+        <p class="eyebrow"><span class="dot"></span>akorda.kz</p>
+        <h2 data-i18n="sources_title">База знаний</h2>
+        <p data-i18n="sources_text">Бот отвечает только по этим официальным документам. Каждый ответ содержит ссылку на первоисточник.</p>
+      </div>
+      <div id="source-list" class="timeline"></div>
+    </section>
+  </main>
+
+  <canvas id="confetti" aria-hidden="true"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>

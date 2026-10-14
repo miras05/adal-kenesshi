@@ -1,0 +1,98 @@
+[
+  {
+    "id": "constitution_2026",
+    "type": "constitution",
+    "url": "https://akorda.kz/ru/official_documents/constitution",
+    "date": "принята на республиканском референдуме 15 марта 2026 г., вступила в силу 1 июля 2026 г."
+  },
+  {
+    "id": "ukaz_vnutrennyaya_politika_2025",
+    "type": "decree",
+    "url": "https://akorda.kz/ru/ob-utverzhdenii-osnovnyh-principov-cennostey-i-napravleniy-vnutrenney-politiki-respubliki-kazahstan-5105824",
+    "date": "5 ноября 2025 г."
+  },
+  {
+    "id": "poslanie_2025_ai",
+    "type": "address",
+    "url": "https://akorda.kz/ru/poslanie-glavy-gosudarstva-kasym-zhomarta-tokaeva-narodu-kazahstana-kazahstan-v-epohu-iskusstvennogo-intellekta-aktualnye-zadachi-i-ih-resheniya-cherez-cifrovuyu-transformaciyu-885145",
+    "date": "8 сентября 2025 г."
+  },
+  {
+    "id": "poslanie_2024",
+    "type": "address",
+    "url": "https://akorda.kz/ru/poslanie-glavy-gosudarstva-kasym-zhomarta-tokaeva-narodu-kazahstana-spravedlivyy-kazahstan-zakon-i-poryadok-ekonomicheskiy-rost-obshchestvennyy-optimizm-285014",
+    "date": "2 сентября 2024 г."
+  },
+  {
+    "id": "poslanie_2023",
+    "type": "address",
+    "url": "https://akorda.kz/ru/poslanie-glavy-gosudarstva-kasym-zhomarta-tokaeva-narodu-kazahstana-ekonomicheskiy-kurs-spravedlivogo-kazahstana-18588",
+    "date": "1 сентября 2023 г."
+  },
+  {
+    "id": "poslanie_181130",
+    "type": "address",
+    "url": "https://akorda.kz/ru/poslanie-glavy-gosudarstva-kasym-zhomarta-tokaeva-narodu-kazahstana-181130",
+    "date": "1 сентября 2022 г."
+  },
+  {
+    "id": "poslanie_183048",
+    "type": "address",
+    "url": "https://akorda.kz/ru/poslanie-glavy-gosudarstva-kasym-zhomarta-tokaeva-narodu-kazahstana-183048",
+    "date": "1 сентября 2021 г."
+  },
+  {
+    "id": "poslanie_1623953",
+    "type": "address",
+    "url": "https://akorda.kz/ru/poslanie-glavy-gosudarstva-kasym-zhomarta-tokaeva-narodu-kazahstana-1623953",
+    "date": "16 марта 2022 г."
+  },
+  {
+    "id": "poslanie_2020",
+    "type": "address",
+    "url": "https://akorda.kz/ru/addresses/addresses_of_president/poslanie-glavy-gosudarstva-kasym-zhomarta-tokaeva-narodu-kazahstana-1-sentyabrya-2020-g",
+    "date": "1 сентября 2020 г."
+  },
+  {
+    "id": "poslanie_2019",
+    "type": "address",
+    "url": "https://akorda.kz/ru/addresses/addresses_of_president/poslanie-glavy-gosudarstva-kasym-zhomarta-tokaeva-narodu-kazahstana",
+    "date": "2 сентября 2019 г."
+  },
+  {
+    "id": "speech_halyk_kenesi_2026",
+    "type": "speech",
+    "url": "https://akorda.kz/ru/vystuplenie-glavy-gosudarstva-kasym-zhomarta-tokaeva-na-pervoy-sessii-kazakstan-halyk-kenesi-2484620",
+    "date": "24 сентября 2026 г."
+  },
+  {
+    "id": "speech_den_abaya_2026",
+    "type": "speech",
+    "url": "https://akorda.kz/ru/pozdravlenie-glavy-gosudarstva-kasym-zhomarta-tokaeva-s-dnem-abaya-1072330",
+    "date": "10 августа 2026 г."
+  },
+  {
+    "id": "speech_pravoohranitelnye_2025",
+    "type": "speech",
+    "url": "https://akorda.kz/ru/vystuplenie-prezidenta-kasym-zhomarta-tokaeva-na-zasedanii-rasshirennoy-kollegii-pravoohranitelnyh-organov-235114",
+    "date": "23 июня 2025 г."
+  },
+  {
+    "id": "kurultai_3",
+    "type": "speech",
+    "url": "https://akorda.kz/ru/glava-gosudarstva-provel-trete-zasedanie-nacionalnogo-kurultaya-1525841",
+    "date": ""
+  },
+  {
+    "id": "konsolidaciya_i_razvitie",
+    "type": "concept",
+    "url": "https://akorda.kz/ru/konsolidaciya-i-razvitie-konceptualnye-osnovy-politicheskogo-kursa-prezidenta-kasym-zhomarta-tokaeva-277217",
+    "date": ""
+  },
+  {
+    "id": "speech_ank_xxxii",
+    "type": "speech",
+    "url": "https://akorda.kz/ru/vystuplenie-glavy-gosudarstva-kk-tokaeva-na-xxxii-sessii-assamblei-naroda-kazahstana-spravedlivyy-kazahstan-edinstvo-stabilnost-razvitie-273234",
+    "date": ""
+  }
+]

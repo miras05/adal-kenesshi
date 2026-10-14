@@ -1,0 +1,12 @@
+aiogram==3.31.0
+anthropic==1.13.0
+beautifulsoup4==4.15.0
+fastapi==0.143.0
+fastembed==0.9.0
+httpx==0.28.1
+numpy==2.5.4
+pydantic==2.13.5
+pytest==9.1.1
+python-dotenv==1.2.4
+rank-bm25==0.2.2
+uvicorn[standard]==0.54.0

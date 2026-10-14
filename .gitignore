@@ -1,0 +1,18 @@
+# Секреты
+.env
+*.pem
+
+# Окружение и кэш
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.DS_Store
+
+# Большие/генерируемые данные (пересобираются скриптами)
+data/models/
+data/app.db
+data/*.db-journal
+
+# Документы организаторов
+*.docx
