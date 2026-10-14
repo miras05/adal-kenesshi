@@ -40,6 +40,8 @@ MIN_RELEVANCE = _float("MIN_RELEVANCE", 0.80)
 DB_PATH = Path(os.getenv("DB_PATH", DATA_DIR / "app.db"))
 ADMIN_TOKEN = os.getenv("ADMIN_TOKEN", "")
 RATE_LIMIT_PER_MIN = _int("RATE_LIMIT_PER_MIN", 20)
+# Защита бюджета: не больше N вопросов к LLM за сутки на весь сайт
+DAILY_LLM_LIMIT = _int("DAILY_LLM_LIMIT", 300)
 MAX_QUESTION_LEN = _int("MAX_QUESTION_LEN", 1000)
 ALLOWED_ORIGINS = [o for o in os.getenv("ALLOWED_ORIGINS", "").split(",") if o]
 

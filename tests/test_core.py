@@ -138,6 +138,7 @@ def run(gen):
 @pytest.fixture
 def no_db(monkeypatch):
     monkeypatch.setattr(service.db, "log_query", lambda **kw: 42)
+    monkeypatch.setattr(service.db, "llm_calls_last_24h", lambda: 0)
 
 
 def fake_stream(*chunks):
@@ -216,3 +217,10 @@ def test_fix_constitution_lines():
     assert "📜" not in service.fix_constitution_lines(bad)
     assert service.fix_constitution_lines(good) == good
     assert "📜" not in service.fix_constitution_lines("📜 Конституция баптарында тікелей кездеспейді [9]")
+
+
+def test_daily_budget_limit(monkeypatch, no_db):
+    monkeypatch.setattr(service, "_retriever", FakeRetriever(0.9))
+    monkeypatch.setattr(service.db, "llm_calls_last_24h", lambda: 10**6)
+    events = run(service.answer("Вопрос?"))
+    assert events[-1]["type"] == "error" and events[-1]["code"] == "daily_limit"

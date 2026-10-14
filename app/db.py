@@ -70,6 +70,12 @@ def log_query(**fields) -> int:
         return cur.lastrowid
 
 
+def llm_calls_last_24h() -> int:
+    """Сколько ответов сгенерировала LLM за сутки (для дневного лимита бюджета)."""
+    return conn().execute("SELECT COUNT(*) FROM queries WHERE ts > ? AND model IS NOT NULL",
+                          (time.time() - 86400,)).fetchone()[0]
+
+
 def save_feedback(query_id: int, value: int) -> bool:
     with _lock:
         if not conn().execute("SELECT 1 FROM queries WHERE id=?", (query_id,)).fetchone():

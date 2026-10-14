@@ -36,6 +36,7 @@ ERRORS = {
         "credit": "Закончился лимит AI-сервиса. Сообщите администратору.",
         "api": "AI-сервис временно недоступен. Попробуйте позже.",
         "refusal": "Не могу ответить на этот запрос. Попробуйте сформулировать вопрос иначе.",
+        "daily_limit": "Демо-версия исчерпала дневной лимит вопросов. Приходите завтра — или попробуйте вкладки «Ценности» и «Квиз».",
     },
     "kk": {
         "empty": "Сұрағыңызды жазыңыз.",
@@ -47,6 +48,7 @@ ERRORS = {
         "credit": "AI-сервис лимиті бітті. Әкімшіге хабарлаңыз.",
         "api": "AI-сервис уақытша қолжетімсіз. Кейінірек қайталап көріңіз.",
         "refusal": "Бұл сұраққа жауап бере алмаймын. Сұрақты басқаша қойып көріңіз.",
+        "daily_limit": "Демо-нұсқаның бүгінгі сұрақ лимиті бітті. Ертең келіңіз — немесе «Құндылықтар» мен «Квиз» бөлімдерін қараңыз.",
     },
 }
 
@@ -152,6 +154,10 @@ async def answer(question: str, history: list[dict] | None = None, lang: str | N
         qid = db.log_query(**record, answered=0, latency_ms=int((time.monotonic() - t0) * 1000))
         yield {"type": "done", "query_id": qid, "answered": False, "cited": [], "constitution": False,
                "latency_ms": int((time.monotonic() - t0) * 1000)}
+        return
+
+    if db.llm_calls_last_24h() >= config.DAILY_LLM_LIMIT:
+        yield {"type": "error", "code": "daily_limit", "message": error_text("daily_limit", lang)}
         return
 
     sources = [source_card(n, h) for n, h in enumerate(hits, 1)]

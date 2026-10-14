@@ -64,8 +64,10 @@ async def security_headers(request: Request, call_next):
 
 
 def client_id(request: Request) -> str:
-    fwd = request.headers.get("x-forwarded-for", "")
-    return fwd.split(",")[0].strip() or (request.client.host if request.client else "unknown")
+    """IP посетителя. За прокси (ngrok, Hugging Face) берём ПОСЛЕДНИЙ адрес из
+    X-Forwarded-For — его дописал сам прокси; первые адреса клиент может подделать."""
+    fwd = [x.strip() for x in request.headers.get("x-forwarded-for", "").split(",") if x.strip()]
+    return fwd[-1] if fwd else (request.client.host if request.client else "unknown")
 
 
 # ---------- Модели запросов ----------
