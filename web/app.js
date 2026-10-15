@@ -414,6 +414,19 @@ function sourceCard(s, cited, quote) {
     </div>`;
 }
 
+/** Короткая подпись источника: «Конституция · Статья 3», «Закон «О противодействии коррупции» · Статья 24», «Послание · 2 сентября 2024 г.» */
+function chipLabel(s) {
+  const L = I18N[state.lang];
+  const where = srcWhere(s);
+  if (s.is_constitution) return `${L.types.constitution}${where ? " · " + where : ""}`;
+  if (s.type === "law" || s.type === "decree") {
+    const short = s.title.replace(/^Закон РК /, "").replace(/ ҚР Заңы$/, "").replace(/\s*\((Указ|Жарлық)[^)]*\)\s*$/, "");
+    const name = short.length > 48 ? short.slice(0, 46) + "…" : short;
+    return `${s.type === "law" ? L.types.law : L.types.decree} ${name}${where ? " · " + where : ""}`;
+  }
+  return `${L.types[s.type] || s.type}${s.date ? " · " + s.date.split(",")[0] : ""}`;
+}
+
 function renderSources(extra, sources, cited, quotes = {}) {
   if (!sources.length) return;
   const L = I18N[state.lang];
@@ -423,7 +436,7 @@ function renderSources(extra, sources, cited, quotes = {}) {
   // Короткие «чипы» процитированных источников; полные карточки — по клику
   const chips = main.map((s, i) => `
     <button type="button" class="src-chip ${s.is_constitution ? "const" : ""} ${quotes[s.n] ? "has-quote" : ""}" style="--i:${i}" data-n="${s.n}">
-      <b>${s.n}</b> ${s.is_constitution ? "📜 " : ""}${esc(L.types[s.type] || s.type)}${srcWhere(s) ? " · " + esc(srcWhere(s)) : ""}${!s.is_constitution && s.date ? " · " + esc(s.date.split(",")[0]) : ""}
+      <b>${s.n}</b> ${s.is_constitution ? "📜 " : ""}${esc(chipLabel(s))}
     </button>`).join("");
   const box = document.createElement("div");
   box.innerHTML = `
