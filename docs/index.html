@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Адал Кеңесші — презентация проекта</title>
+<meta name="description" content="AI-навигатор по Конституции РК 2026, законам и ценностям внутренней политики. Конкурс «Адал қоғам», МУИТ.">
+<meta property="og:title" content="Адал Кеңесші — AI-навигатор по Конституции 2026">
+<meta property="og:description" content="Честные ответы по официальным документам, со ссылкой на статью. Қазақша · Русский.">
+<meta name="theme-color" content="#061820">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='30' fill='%2300A3C4'/%3E%3Ccircle cx='32' cy='32' r='15' fill='none' stroke='%23F5B800' stroke-width='4'/%3E%3Cpath d='M24 19v26M32 17v30M40 19v26M19 24h26M17 32h30M19 40h26' stroke='%23F5B800' stroke-width='2.4'/%3E%3C/svg%3E">
+<style>
+/* Сцена 1600×900, масштабируется под любой экран. Тёмное «ночное небо над степью»,
+   национальные цвета (Указ № 1081): небесно-бирюзовый и золотистый. */
+@property --angle { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+:root {
+  --bg: #061820; --bg2: #0A2530; --card: rgba(16, 44, 56, .62); --card-solid: #0F2A35;
+  --line: rgba(255, 255, 255, .09); --line2: rgba(255, 255, 255, .16);
+  --text: #EAF5F8; --muted: #8FB0BA; --dim: #5E7F89;
+  --sky: #33C8E6; --sky2: #84E0F2; --sky-soft: rgba(51, 200, 230, .12);
+  --gold: #FFC93D; --gold2: #FFD978; --gold-soft: rgba(255, 201, 61, .13);
+  --ok: #4CD493; --bad: #FF6B7D;
+  --display: "Unbounded", "Onest", system-ui, sans-serif;
+  --body: "Onest", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --ease: cubic-bezier(.2, .8, .2, 1); --spring: cubic-bezier(.34, 1.56, .64, 1);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text); font-family: var(--body); overflow: hidden; -webkit-font-smoothing: antialiased; }
+
+/* ---------- фон ---------- */
+.sky { position: fixed; inset: 0; overflow: hidden; background: radial-gradient(120% 90% at 50% 120%, #0B2A33 0%, var(--bg) 60%); }
+.aurora { position: absolute; border-radius: 50%; filter: blur(80px); opacity: .9; }
+.a1 { width: 70vmax; height: 70vmax; left: -20vmax; top: -30vmax; background: radial-gradient(circle, rgba(0, 200, 230, .22), transparent 65%); animation: d1 24s var(--ease) infinite alternate; }
+.a2 { width: 60vmax; height: 60vmax; right: -22vmax; bottom: -28vmax; background: radial-gradient(circle, rgba(255, 190, 40, .15), transparent 65%); animation: d2 28s var(--ease) infinite alternate; }
+.a3 { width: 45vmax; height: 45vmax; right: 8vmax; top: -15vmax; background: radial-gradient(circle, rgba(60, 110, 255, .14), transparent 65%); animation: d3 32s var(--ease) infinite alternate; }
+@keyframes d1 { to { transform: translate(14vmax, 10vmax) scale(1.15); } }
+@keyframes d2 { to { transform: translate(-12vmax, -8vmax) scale(1.2); } }
+@keyframes d3 { to { transform: translate(-16vmax, 12vmax) scale(.9); } }
+#stars { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+/* ---------- сцена и слайды ---------- */
+.viewport { position: fixed; inset: 0; display: grid; place-items: center; }
+.stage { width: 1600px; height: 900px; position: relative; transform-origin: center; flex: none; }
+.slide { position: absolute; inset: 0; padding: 84px 104px 80px; display: flex; flex-direction: column; opacity: 0; visibility: hidden; transform: translateX(60px) scale(.985); transition: opacity .6s var(--ease), transform .7s var(--ease), visibility 0s .7s; }
+.slide.active { opacity: 1; visibility: visible; transform: none; transition: opacity .6s var(--ease), transform .7s var(--ease); }
+.slide.past { transform: translateX(-60px) scale(.985); }
+.in { opacity: 0; }
+.slide.active .in { animation: rise .8s var(--ease) both; animation-delay: calc(var(--d, 0) * 110ms + 120ms); }
+@keyframes rise { from { opacity: 0; transform: translateY(26px); filter: blur(8px); } to { opacity: 1; transform: none; filter: none; } }
+
+/* ---------- типографика ---------- */
+.eyebrow { display: inline-flex; align-items: center; gap: 12px; font-size: 19px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--sky2); }
+.eyebrow::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 6px var(--gold-soft); }
+h1, h2 { font-family: var(--display); margin: 0; letter-spacing: -.03em; text-wrap: balance; }
+h2 { font-size: 58px; font-weight: 800; line-height: 1.08; margin-top: 18px; }
+.lead { font-size: 26px; line-height: 1.5; color: var(--muted); margin: 22px 0 0; max-width: 1080px; }
+.grad { background: linear-gradient(100deg, var(--sky) 0%, var(--sky2) 44%, var(--gold) 50%, var(--sky2) 56%, var(--sky) 100%); background-size: 300% 100%; background-position: 100% 0; -webkit-background-clip: text; background-clip: text; color: transparent; animation: sheen 6s 1.5s var(--ease) infinite; }
+@keyframes sheen { 0% { background-position: 100% 0; } 55%, 100% { background-position: 0 0; } }
+.gold { color: var(--gold); }
+.sky-t { color: var(--sky); }
+b, strong { font-weight: 700; }
+
+/* ---------- общие блоки ---------- */
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 26px; backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+.row { display: flex; gap: 28px; }
+.grow { flex: 1; min-width: 0; }
+.pill { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; border-radius: 999px; border: 1px solid var(--line2); background: rgba(255, 255, 255, .04); font-size: 20px; font-weight: 600; }
+.chips { display: flex; flex-wrap: wrap; gap: 12px; }
+
+/* браузер и телефон */
+.browser { border-radius: 22px; overflow: hidden; border: 1px solid var(--line2); background: #0B1F27; box-shadow: 0 40px 90px -30px rgba(0, 0, 0, .8), 0 0 0 1px rgba(255, 255, 255, .03); }
+.browser .bar { height: 40px; display: flex; align-items: center; gap: 8px; padding: 0 16px; background: rgba(255, 255, 255, .04); border-bottom: 1px solid var(--line); }
+.browser .bar i { display: block; width: 12px; height: 12px; border-radius: 50%; background: #FF6B7D; }
+.browser .bar i:nth-child(2) { background: var(--gold); } .browser .bar i:nth-child(3) { background: var(--ok); }
+.browser .bar span { margin-left: 14px; font-size: 14px; color: var(--dim); }
+.browser img { display: block; width: 100%; max-height: 610px; object-fit: cover; object-position: center top; }
+.phone { width: 300px; border-radius: 44px; padding: 12px; background: #0B1F27; border: 1px solid var(--line2); box-shadow: 0 40px 90px -30px rgba(0, 0, 0, .9); flex: none; }
+.phone img { display: block; width: 100%; border-radius: 32px; }
+
+/* ---------- шаңырақ ---------- */
+.shanyrak { overflow: visible; }
+.shanyrak .uyk { transform-origin: 50px 50px; animation: spin 70s linear infinite; }
+.shanyrak .uyk line { stroke: var(--sky); stroke-width: 1.6; stroke-linecap: round; }
+.shanyrak .ring { fill: none; stroke: url(#shg); stroke-width: 3.2; }
+.shanyrak .ring-in { fill: none; stroke: var(--gold); stroke-width: 1.6; }
+.shanyrak .core { fill: rgba(51, 200, 230, .10); }
+.shanyrak .bars path { fill: none; stroke: var(--gold); stroke-width: 2.4; stroke-linecap: round; }
+.slide.active .draw .ring, .slide.active .draw .ring-in, .slide.active .draw .bars path { stroke-dasharray: 260; stroke-dashoffset: 260; animation: draw 2s var(--ease) forwards; }
+.slide.active .draw .bars path { animation-delay: .6s; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+@keyframes spin { to { transform: rotate(360deg); } }
+.orb { position: relative; display: grid; place-items: center; }
+.orb::before { content: ""; position: absolute; inset: -14%; border-radius: 50%; background: conic-gradient(from var(--angle), var(--sky), var(--gold), var(--sky)); filter: blur(46px); opacity: .5; animation: rot 9s linear infinite; }
+@keyframes rot { to { --angle: 360deg; } }
+.orb svg { position: relative; width: 100%; height: 100%; animation: float 6s ease-in-out infinite; }
+@keyframes float { 50% { transform: translateY(-10px); } }
+
+/* ---------- 1. Титул ---------- */
+.s-title { justify-content: center; align-items: center; text-align: center; }
+.s-title .orb { width: 210px; height: 210px; margin-bottom: 24px; }
+.s-title h1 { font-size: 128px; font-weight: 800; line-height: 1; letter-spacing: -.045em; }
+.s-title .sub { font-size: 30px; color: var(--muted); margin-top: 26px; max-width: 1100px; line-height: 1.45; }
+.s-title .chips { justify-content: center; margin-top: 40px; }
+.s-title .team { margin-top: 34px; font-size: 19px; color: var(--dim); letter-spacing: .02em; }
+
+/* ---------- 2. Проблема ---------- */
+.big-nums { display: flex; gap: 22px; margin-top: 46px; }
+.big-num { flex: 1; padding: 30px 30px 26px; }
+.big-num b { display: block; font: 800 82px/1 var(--display); letter-spacing: -.04em; color: var(--sky); font-variant-numeric: tabular-nums; }
+.big-num span { display: block; margin-top: 12px; font-size: 22px; color: var(--muted); line-height: 1.35; }
+.fake { margin-top: 30px; padding: 26px 30px; display: flex; gap: 26px; align-items: center; border-color: rgba(255, 107, 125, .35); background: rgba(255, 107, 125, .07); }
+.fake .q { font-size: 23px; color: var(--muted); }
+.fake .a { font-size: 25px; margin-top: 6px; text-decoration: line-through; text-decoration-color: var(--bad); text-decoration-thickness: 3px; }
+.fake .x { margin-left: auto; flex: none; padding: 10px 18px; border-radius: 14px; background: var(--bad); color: #2B0008; font-weight: 800; font-size: 20px; }
+
+/* ---------- 3. Решение ---------- */
+.pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 52px; }
+.pillar { padding: 30px 26px; display: flex; flex-direction: column; gap: 14px; }
+.pillar .ic { width: 64px; height: 64px; border-radius: 20px; display: grid; place-items: center; font-size: 32px; background: var(--sky-soft); }
+.pillar.g .ic { background: var(--gold-soft); }
+.pillar h3 { margin: 0; font: 600 25px/1.25 var(--display); letter-spacing: -.01em; }
+.pillar p { margin: 0; font-size: 19.5px; line-height: 1.45; color: var(--muted); }
+
+/* ---------- скриншот-слайды ---------- */
+.shot-layout { display: flex; gap: 52px; align-items: center; flex: 1; margin-top: 10px; min-height: 0; }
+.shot-text { width: 500px; flex: none; display: flex; flex-direction: column; }
+.shot-text h2 { font-size: 50px; }
+.shot-text .lead { font-size: 23px; }
+.shot-media { flex: 1; min-width: 0; position: relative; }
+.points { list-style: none; padding: 0; margin: 30px 0 0; display: grid; gap: 16px; }
+.points li { display: flex; gap: 14px; font-size: 21px; line-height: 1.4; color: var(--text); }
+.points li::before { content: ""; flex: none; width: 10px; height: 10px; margin-top: 10px; border-radius: 3px; background: var(--gold); transform: rotate(45deg); }
+.points li span { color: var(--muted); }
+.callout { position: absolute; padding: 14px 18px; border-radius: 16px; font-size: 18px; font-weight: 600; background: var(--card-solid); border: 1px solid rgba(255, 201, 61, .5); box-shadow: 0 20px 40px -18px rgba(0, 0, 0, .9); max-width: 330px; line-height: 1.35; }
+.callout small { display: block; font-weight: 500; color: var(--muted); font-size: 15px; margin-top: 4px; }
+.verdicts { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 28px; }
+.vd { display: flex; align-items: center; gap: 12px; padding: 14px 16px; border-radius: 16px; font-size: 19px; font-weight: 700; border: 1px solid var(--line2); }
+.vd i { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; font-style: normal; color: #062; flex: none; }
+.vd.t { background: rgba(76, 212, 147, .1); } .vd.t i { background: var(--ok); color: #03301C; }
+.vd.f { background: rgba(255, 107, 125, .1); } .vd.f i { background: var(--bad); color: #2B0008; }
+.vd.p { background: var(--gold-soft); } .vd.p i { background: var(--gold); color: #2A1F00; }
+.vd.u { background: rgba(255, 255, 255, .04); } .vd.u i { background: var(--muted); color: #0A1A20; }
+
+/* ---------- 8. мультиканальность ---------- */
+.multi { display: grid; grid-template-columns: 300px 1fr; gap: 46px; align-items: center; flex: 1; margin-top: 18px; }
+.feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.feat { padding: 24px; display: flex; gap: 18px; align-items: flex-start; }
+.feat .ic { font-size: 30px; flex: none; width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; background: var(--sky-soft); }
+.feat h3 { margin: 0; font: 600 22px/1.25 var(--display); }
+.feat p { margin: 6px 0 0; font-size: 18px; color: var(--muted); line-height: 1.4; }
+.feat code { font-family: ui-monospace, Menlo, monospace; color: var(--gold2); font-size: 16px; }
+
+/* ---------- 9. как работает ---------- */
+.flow { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; margin-top: 64px; position: relative; }
+.flow::before { content: ""; position: absolute; left: 7%; right: 7%; top: 58px; height: 3px; border-radius: 3px; background: linear-gradient(90deg, var(--sky), var(--gold)); transform-origin: left; transform: scaleX(0); }
+.slide.active .flow::before { animation: grow 2.2s .4s var(--ease) forwards; }
+@keyframes grow { to { transform: scaleX(1); } }
+.node { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 0 10px; position: relative; }
+.node .dot { width: 116px; height: 116px; border-radius: 34px; display: grid; place-items: center; font-size: 46px; background: var(--card-solid); border: 1px solid var(--line2); box-shadow: 0 20px 40px -18px rgba(0, 0, 0, .8); position: relative; z-index: 1; }
+.node.gold .dot { border-color: rgba(255, 201, 61, .55); box-shadow: 0 0 0 6px var(--gold-soft), 0 20px 40px -18px rgba(0, 0, 0, .8); }
+.node h3 { margin: 22px 0 8px; font: 600 21px/1.25 var(--display); }
+.node p { margin: 0; font-size: 17px; color: var(--muted); line-height: 1.4; }
+.node .n { position: absolute; top: -12px; right: 22%; z-index: 2; width: 34px; height: 34px; border-radius: 50%; background: var(--gold); color: #2A1F00; font-weight: 800; font-size: 16px; display: grid; place-items: center; }
+.flow-note { margin-top: 54px; display: flex; gap: 18px; }
+.flow-note .card { flex: 1; padding: 22px 26px; font-size: 20px; line-height: 1.45; color: var(--muted); }
+.flow-note b { color: var(--text); }
+
+/* ---------- 10. база знаний ---------- */
+.kb { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 40px; }
+.kb .card { padding: 30px 32px; }
+.kb h3 { margin: 0 0 6px; font: 600 25px/1.3 var(--display); display: flex; justify-content: space-between; align-items: baseline; gap: 12px; }
+.kb h3 small { font: 500 17px var(--body); color: var(--sky2); }
+.kb ul { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 11px; }
+.kb li { font-size: 19.5px; line-height: 1.35; display: flex; gap: 12px; color: var(--text); }
+.kb li::before { content: "—"; color: var(--gold); flex: none; }
+.kb-stats { display: flex; gap: 18px; margin-top: 30px; }
+.kb-stat { flex: 1; padding: 20px 26px; display: flex; align-items: center; gap: 18px; }
+.kb-stat b { font: 800 50px/1 var(--display); color: var(--gold); font-variant-numeric: tabular-nums; }
+.kb-stat span { font-size: 19px; color: var(--muted); line-height: 1.3; }
+.kb-stat.warn { border-color: rgba(255, 201, 61, .4); }
+.kb-stat.warn b { font-size: 40px; }
+
+/* ---------- 11. качество ---------- */
+.metrics { display: grid; grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(0, 1fr)); gap: 20px; margin-top: 50px; }
+.metric { padding: 34px 30px 30px; display: flex; flex-direction: column; justify-content: space-between; min-height: 300px; }
+.metric b { display: block; font: 800 70px/1 var(--display); letter-spacing: -.05em; font-variant-numeric: tabular-nums; }
+.metric.main b { font-size: 118px; }
+.metric .num { font: inherit; color: inherit; margin: 0; }
+.metric > span { font-size: 21px; color: var(--muted); line-height: 1.35; margin-top: 18px; }
+.metric.main { background: linear-gradient(150deg, rgba(51, 200, 230, .18), rgba(255, 201, 61, .08)); border-color: rgba(51, 200, 230, .35); }
+.metric .bar { height: 8px; border-radius: 8px; background: rgba(255, 255, 255, .07); margin-top: 22px; overflow: hidden; }
+.metric .bar i { display: block; height: 100%; width: 0; border-radius: 8px; background: linear-gradient(90deg, var(--sky), var(--gold)); transition: width 1.6s var(--ease); }
+.metric-foot { margin-top: 26px; display: flex; gap: 14px; flex-wrap: wrap; }
+
+/* ---------- 12. безопасность ---------- */
+.sec { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 44px; }
+.sec .card { padding: 28px; }
+.sec .ic { font-size: 34px; }
+.sec h3 { margin: 14px 0 8px; font: 600 23px/1.25 var(--display); }
+.sec p { margin: 0; font-size: 18.5px; color: var(--muted); line-height: 1.45; }
+
+/* ---------- 13. стек ---------- */
+.stack { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 46px; }
+.stack .card { padding: 28px 30px; }
+.stack .lbl { font-size: 16px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--sky2); }
+.stack .val { font: 600 26px/1.3 var(--display); margin-top: 10px; }
+.stack .val small { display: block; font: 500 18px/1.4 var(--body); color: var(--muted); margin-top: 8px; }
+
+/* ---------- 14. польза ---------- */
+.impact { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 46px; }
+.impact .card { padding: 28px 24px; }
+.impact .ic { font-size: 38px; }
+.impact h3 { margin: 14px 0 10px; font: 600 23px/1.25 var(--display); }
+.impact p { margin: 0; font-size: 18px; color: var(--muted); line-height: 1.45; }
+.road { margin-top: 30px; padding: 24px 30px; display: flex; align-items: center; gap: 26px; }
+.road .lbl { font: 600 20px var(--display); color: var(--gold); flex: none; }
+.road .steps { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* ---------- 15. финал ---------- */
+.s-final { align-items: center; text-align: center; justify-content: center; }
+.s-final h2 { font-size: 92px; }
+.qrs { display: flex; gap: 40px; justify-content: center; margin-top: 50px; }
+.qr { padding: 22px 22px 18px; display: flex; flex-direction: column; align-items: center; gap: 14px; width: 270px; }
+.qr img { width: 220px; height: 220px; border-radius: 18px; background: #fff; padding: 8px; }
+.qr b { font: 600 22px var(--display); }
+.qr span { font-size: 15px; color: var(--muted); word-break: break-all; }
+.thanks { margin-top: 46px; font: 600 30px var(--display); color: var(--muted); }
+
+/* ---------- навигация ---------- */
+.progress { position: fixed; left: 0; top: 0; height: 4px; background: linear-gradient(90deg, var(--sky), var(--gold)); transition: width .6s var(--ease); z-index: 10; }
+.nav { position: fixed; right: 22px; bottom: 18px; display: flex; align-items: center; gap: 8px; z-index: 10; opacity: .55; transition: opacity .3s; }
+.nav:hover { opacity: 1; }
+.nav button { width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--line2); background: rgba(255, 255, 255, .05); color: var(--text); font-size: 18px; cursor: pointer; }
+.nav button:hover { background: var(--sky-soft); }
+.nav .count { font-size: 14px; color: var(--muted); min-width: 56px; text-align: center; font-variant-numeric: tabular-nums; }
+.brand-mini { position: fixed; left: 24px; bottom: 20px; display: flex; align-items: center; gap: 10px; font: 600 15px var(--display); color: var(--dim); z-index: 10; }
+.brand-mini svg { width: 26px; height: 26px; }
+.notes { position: fixed; left: 50%; bottom: 76px; transform: translateX(-50%); width: min(900px, calc(100% - 40px)); padding: 18px 22px; border-radius: 18px; background: rgba(6, 24, 32, .94); border: 1px solid rgba(255, 201, 61, .45); font-size: 17px; line-height: 1.5; color: var(--text); z-index: 20; }
+.notes b { color: var(--gold); display: block; font-size: 13px; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
+.hint { position: fixed; left: 50%; bottom: 22px; transform: translateX(-50%); font-size: 13px; color: var(--dim); z-index: 10; transition: opacity 1s; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="shg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00A3C4"/><stop offset=".55" stop-color="#2BC0DE"/><stop offset="1" stop-color="#F5B800"/></linearGradient>
+</defs></svg>
+
+<div class="sky" aria-hidden="true"><div class="aurora a1"></div><div class="aurora a2"></div><div class="aurora a3"></div><canvas id="stars"></canvas></div>
+<div class="progress" id="progress"></div>
+
+<div class="viewport"><div class="stage" id="stage">
+
+  <!-- 1 -->
+  <section class="slide s-title" data-notes="Добрый день! Мы — команда … Представляем «Адал Кеңесші» — «Честный советник». Это AI-навигатор по новой Конституции, законам и ценностям внутренней политики. Главное: он отвечает только по официальным документам и всегда показывает, где это написано.">
+    <div class="orb in" style="--d:0"><span class="shanyrak-slot" data-draw="1"></span></div>
+    <p class="eyebrow in" style="--d:2">Конкурс AI-ботов «Адал қоғам» · МУИТ · 2026</p>
+    <h1 class="in" style="--d:3"><span class="grad">Адал Кеңесші</span></h1>
+    <p class="sub in" style="--d:4">AI-навигатор по Конституции 2026, законам и ценностям внутренней политики Казахстана — с доказательствами из официальных документов</p>
+    <div class="chips in" style="--d:5">
+      <span class="pill">🇰🇿 Қазақша · Русский</span><span class="pill">🌐 Web + Telegram</span><span class="pill">📜 Только официальные источники</span>
+    </div>
+    <p class="team in" style="--d:6">Команда «…» · Имя Фамилия · Имя Фамилия · Имя Фамилия</p>
+  </section>
+
+  <!-- 2 -->
+  <section class="slide" data-notes="1 июля 2026 года вступила в силу новая Конституция. Плюс Указ о ценностях внутренней политики, Послания, антикоррупционные законы — сотни страниц. Где искать ответ? Обычные AI-чаты уверенно выдумывают: например, «статья 99», хотя в Конституции 96 статей. В теме честности это недопустимо.">
+    <p class="eyebrow in" style="--d:0">Проблема</p>
+    <h2 class="in" style="--d:1">Новая Конституция действует <span class="gold">с 1 июля 2026</span>.<br>Найти в ней ответ — сложно.</h2>
+    <div class="big-nums">
+      <div class="card big-num in" style="--d:2"><b data-count="96">96</b><span>статей новой Конституции + преамбула</span></div>
+      <div class="card big-num in" style="--d:3"><b data-count="23">23</b><span>ключевых документа: законы, указы, Послания</span></div>
+      <div class="card big-num in" style="--d:4"><b data-count="2">2</b><span>языка, на которых нужны ответы: қазақша и русский</span></div>
+    </div>
+    <div class="card fake in" style="--d:5">
+      <div><div class="q">Типичный AI-чат на вопрос о Конституции:</div><div class="a">«Согласно статье 99 Конституции РК…»</div></div>
+      <span class="x">В Конституции 96 статей ✕</span>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section class="slide" data-notes="Наше решение — бот, который сначала находит нужные статьи в официальных текстах, а потом отвечает только по ним. Четыре принципа.">
+    <p class="eyebrow in" style="--d:0">Решение</p>
+    <h2 class="in" style="--d:1">Отвечает только по официальным текстам<br><span class="grad">и показывает, где это написано</span></h2>
+    <div class="pillars">
+      <div class="card pillar g in" style="--d:2"><div class="ic">📜</div><h3>Конституция по статьям</h3><p>Если понятие закреплено в Конституции 2026 — бот обязательно указывает статью или преамбулу</p></div>
+      <div class="card pillar in" style="--d:3"><div class="ic">❝</div><h3>Цитата-доказательство</h3><p>Каждая ссылка [n] — точная фраза из документа и переход на akorda.kz / adilet.zan.kz прямо к ней</p></div>
+      <div class="card pillar in" style="--d:4"><div class="ic">🛡️</div><h3>Честное «нет данных»</h3><p>Если подтверждения нет — бот так и говорит, а не выдумывает (п. 4.9 Положения)</p></div>
+      <div class="card pillar g in" style="--d:5"><div class="ic">🇰🇿</div><h3>Қазақша и русский</h3><p>Понимает вопрос даже без казахских букв и латиницей, отвечает на языке вопроса</p></div>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="slide" data-notes="Так выглядит продукт. Современный интерфейс в национальных цветах — бирюза и золото из Указа № 1081, символ — шаңырақ. Три режима: вопрос, моя ситуация, проверка факта. Работает на телефоне.">
+    <p class="eyebrow in" style="--d:0">Продукт</p>
+    <div class="shot-layout">
+      <div class="shot-text">
+        <h2 class="in" style="--d:1">Шаңырақ —<br><span class="grad">сердце бота</span></h2>
+        <p class="lead in" style="--d:2">Национальный символ единства (Указ № 1081) оживает: вращается, пока бот ищет, и пульсирует, пока пишет ответ.</p>
+        <ul class="points">
+          <li class="in" style="--d:3"><div>Три режима <span>— Вопрос · Моя ситуация · Проверка факта</span></div></li>
+          <li class="in" style="--d:4"><div>Шаги поиска на экране <span>— видно, как работает RAG</span></div></li>
+          <li class="in" style="--d:5"><div>Голос, озвучка, тёмная тема, мобильная версия</div></li>
+        </ul>
+      </div>
+      <div class="shot-media row" style="align-items:flex-end;gap:24px">
+        <div class="browser grow in" style="--d:3"><div class="bar"><i></i><i></i><i></i><span>adal-kenesshi · Чат</span></div><img src="img/home.webp" alt="Главная страница Адал Кеңесші"></div>
+        <div class="phone in" style="--d:5;width:210px;border-radius:34px;padding:9px"><img src="img/mobile-home.webp" alt="Мобильная версия" style="border-radius:26px"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="slide" data-notes="Пример: «Что такое Закон и Порядок и закреплён ли он в Конституции?». Бот находит Указ, выступления, закон о профилактике — и золотой печатью показывает: преамбула и статья 3 Конституции. Каждый номер кликабелен — открывается точная цитата.">
+    <p class="eyebrow in" style="--d:0">Ответ с доказательствами</p>
+    <div class="shot-layout">
+      <div class="shot-text">
+        <h2 class="in" style="--d:1">Каждое утверждение — <span class="gold">со ссылкой</span></h2>
+        <p class="lead in" style="--d:2">«Что такое «Закон и Порядок» и закреплён ли он в Конституции?»</p>
+        <ul class="points">
+          <li class="in" style="--d:3"><div>📜 Золотая печать <span>— преамбула и ст. 3 Конституции 2026</span></div></li>
+          <li class="in" style="--d:4"><div>❝ Цитата-доказательство <span>к каждому источнику</span></div></li>
+          <li class="in" style="--d:5"><div>Переход на первоисточник <span>сразу к нужной фразе</span></div></li>
+        </ul>
+      </div>
+      <div class="shot-media in" style="--d:3">
+        <div class="browser"><div class="bar"><i></i><i></i><i></i><span>Ответ · 7 источников · 5.1 с</span></div><img src="img/answer-crop.webp" alt="Ответ с печатью Конституции" style="object-position:center 55%"></div>
+              </div>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="slide" data-notes="Режим «Моя ситуация». Человек пишет бытовыми словами: «сотрудник намекает, что справку выдадут быстрее за деньги». Бот переводит это на язык закона, находит статьи 24, 24-1, 24-3 Закона о противодействии коррупции и даёт план: что говорят нормы, что делать, куда обратиться, какие права и защита. Он никого не обвиняет — это информационная помощь.">
+    <p class="eyebrow in" style="--d:0">Режим «Моя ситуация»</p>
+    <div class="shot-layout">
+      <div class="shot-text">
+        <h2 class="in" style="--d:1">«Просят взятку.<br><span class="grad">Что делать?»</span></h2>
+        <p class="lead in" style="--d:2">Бот переводит бытовой рассказ на язык закона и даёт понятный план.</p>
+        <ul class="points">
+          <li class="in" style="--d:3"><div>Нормы <span>— ст. 24, 24-1, 24-3 Закона «О противодействии коррупции»</span></div></li>
+          <li class="in" style="--d:4"><div>Шаги и каналы <span>— call-центр 1424, E-Otinish</span></div></li>
+          <li class="in" style="--d:5"><div>Права <span>— конфиденциальность, защита 3 года</span></div></li>
+          <li class="in" style="--d:6"><div>Без обвинений <span>— информационная помощь, не заключение</span></div></li>
+        </ul>
+      </div>
+      <div class="shot-media in" style="--d:3"><div class="browser"><div class="bar"><i></i><i></i><i></i><span>🧭 Моя ситуация</span></div><img src="img/situation-crop.webp" alt="Режим Моя ситуация" style="object-position:center 70%"></div></div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="slide" data-notes="Режим «Проверка факта» — против фейков. Вставляем: «По новой Конституции Президент избирается на 5 лет и может переизбираться». Вердикт — не соответствует: статья 43 — семь лет, один раз. Если данных нет — бот честно говорит «нет данных», а не «ложь».">
+    <p class="eyebrow in" style="--d:0">Режим «Проверка факта»</p>
+    <div class="shot-layout">
+      <div class="shot-text">
+        <h2 class="in" style="--d:1">Фейк или правда — <span class="gold">по документам</span></h2>
+        <p class="lead in" style="--d:2">«По новой Конституции Президент избирается на 5 лет и может переизбираться»</p>
+        <div class="verdicts in" style="--d:3">
+          <div class="vd t"><i>✓</i>Подтверждается</div><div class="vd f"><i>✕</i>Не соответствует</div>
+          <div class="vd p"><i>≈</i>Частично верно</div><div class="vd u"><i>?</i>Нет данных</div>
+        </div>
+        <p class="lead in" style="--d:4;font-size:20px">Противодействие фейкам — приоритет информационной политики в Указе № 1081.</p>
+      </div>
+      <div class="shot-media in" style="--d:3">
+        <div class="browser"><div class="bar"><i></i><i></i><i></i><span>🔎 Проверка факта</span></div><img src="img/factcheck-crop.webp" alt="Проверка факта"></div>
+        <div class="callout in" style="--d:7;right:-24px;top:-34px;border-color:rgba(255,107,125,.6)">✕ Ст. 43: семь лет, только один раз<small>бот опроверг цитатой из Конституции</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section class="slide" data-notes="Бот доступен везде: сайт и Telegram. Казахский — полноценный. Есть справочник из 9 ценностей с отметкой, закреплены ли они в Конституции, квиз с таблицей лидеров, голосовой ввод, аналитика для организаторов.">
+    <p class="eyebrow in" style="--d:0">Для каждого</p>
+    <div class="multi">
+      <div class="phone in" style="--d:1"><img src="img/mobile-kk.webp" alt="Ответ на казахском"></div>
+      <div>
+        <h2 class="in" style="--d:1;font-size:52px;margin-top:0">Қазақша, на телефоне,<br><span class="grad">в Telegram</span></h2>
+        <div class="feat-grid" style="margin-top:34px">
+          <div class="card feat in" style="--d:2"><div class="ic">🤖</div><div><h3>Telegram-бот</h3><p>Ответ печатается «вживую», <code>/situation</code>, <code>/check</code>, <code>/quiz</code></p></div></div>
+          <div class="card feat in" style="--d:3"><div class="ic">🎙️</div><div><h3>Голос</h3><p>Голосовой ввод ru-RU / kk-KZ и озвучка ответа</p></div></div>
+          <div class="card feat in" style="--d:4"><div class="ic">🎮</div><div><h3>Квиз «Адал азамат»</h3><p>17 вопросов, проверка на сервере, таблица лидеров</p></div></div>
+          <div class="card feat in" style="--d:5"><div class="ic">📊</div><div><h3>Аналитика</h3><p>Какие вопросы задают и на что нет ответа — для «Адал қоғам»</p></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="slide" data-notes="Как это работает. Вопрос проверяется, при необходимости переформулируется. Гибридный поиск: смысловой — модель e5, понимает казахский — и по ключевым словам BM25. Отдельно проверяем Конституцию. Если ничего похожего нет — честный отказ без вызова нейросети. Claude пишет ответ только по найденным фрагментам, а сервер проверяет ссылки и подбирает цитаты.">
+    <p class="eyebrow in" style="--d:0">Как это работает</p>
+    <h2 class="in" style="--d:1">RAG: сначала <span class="sky-t">найти</span>, потом <span class="gold">ответить</span></h2>
+    <div class="flow">
+      <div class="node in" style="--d:2"><span class="n">1</span><div class="dot">💬</div><h3>Вопрос</h3><p>валидация, язык, режим, лимиты</p></div>
+      <div class="node in" style="--d:3"><span class="n">2</span><div class="dot">🔍</div><h3>Гибридный поиск</h3><p>смысл (e5) + слова (BM25) → RRF</p></div>
+      <div class="node gold in" style="--d:4"><span class="n">3</span><div class="dot">📜</div><h3>Конституция</h3><p>отдельно ищем статьи 2026 года</p></div>
+      <div class="node in" style="--d:5"><span class="n">4</span><div class="dot">🛡️</div><h3>Порог</h3><p>нет похожего — честный отказ</p></div>
+      <div class="node gold in" style="--d:6"><span class="n">5</span><div class="dot">✨</div><h3>Claude</h3><p>отвечает только по фрагментам, с [n]</p></div>
+      <div class="node in" style="--d:7"><span class="n">6</span><div class="dot">❝</div><h3>Проверка</h3><p>цитаты, печать, вердикт, журнал</p></div>
+    </div>
+    <div class="flow-note">
+      <div class="card in" style="--d:8"><b>Межъязыковой поиск:</b> вопрос на казахском находит русский текст и наоборот</div>
+      <div class="card in" style="--d:9"><b>Законы и Конституция — по статьям:</b> ответ ссылается на конкретную статью</div>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section class="slide" data-notes="База знаний — 23 официальных документа на двух языках, 2645 фрагментов. Конституция и основы политики — с akorda.kz, законы — из «Әділет» Минюста в действующей редакции. Важная деталь: скрипт сам отсеивает утратившие силу акты — например, закон о госслужбе 2015 года утратил силу в мае 2026, и бот взял новый.">
+    <p class="eyebrow in" style="--d:0">База знаний</p>
+    <h2 class="in" style="--d:1">Только официальные документы, <span class="gold">только действующие</span></h2>
+    <div class="kb">
+      <div class="card in" style="--d:2"><h3>Основы внутренней политики <small>akorda.kz</small></h3><ul>
+        <li>Конституция РК 2026 — 96 статей и преамбула</li><li>Указ № 1081 о принципах и ценностях внутренней политики</li>
+        <li>Послания народу Казахстана 2019–2025</li><li>Выступления Главы государства 2023–2026</li></ul></div>
+      <div class="card in" style="--d:3"><h3>Законы и антикоррупция <small>adilet.zan.kz</small></h3><ul>
+        <li>«О противодействии коррупции» · Концепция 2022–2026</li><li>«Об общественном контроле» · «О доступе к информации»</li>
+        <li>«О профилактике правонарушений» (2025)</li><li>«О государственной службе» (2026) · Этический кодекс</li></ul></div>
+    </div>
+    <div class="kb-stats">
+      <div class="card kb-stat in" style="--d:4"><b data-count="23">23</b><span>документа<br>на 2 языках</span></div>
+      <div class="card kb-stat in" style="--d:5"><b data-count="2645">2645</b><span>фрагментов<br>в поисковом индексе</span></div>
+      <div class="card kb-stat warn in" style="--d:6"><b>⚠️</b><span><b style="font:600 19px var(--body);color:var(--text)">Закон о госслужбе 2015 утратил силу</b><br>скрипт сам отсеял его и взял закон 2026 года</span></div>
+    </div>
+  </section>
+
+  <!-- 11 -->
+  <section class="slide" data-notes="Мы не просто говорим, что бот точный — мы измерили. 47 контрольных вопросов по всем темам и режимам, на двух языках, плюс ловушки. 98% пройдено. На ловушках, проверке фактов и казахском — 100%. Отчёт лежит в репозитории, его можно перезапустить одной командой.">
+    <p class="eyebrow in" style="--d:0">Качество — измерено</p>
+    <h2 class="in" style="--d:1">47 контрольных вопросов.<br><span class="grad">Результаты:</span></h2>
+    <div class="metrics">
+      <div class="card metric main in" style="--d:2"><div><b><span class="num" data-count="98">98</span>%</b></div><span>вопросов пройдено — ответ со ссылкой на нужный документ</span><div class="bar"><i data-w="98"></i></div></div>
+      <div class="card metric in" style="--d:3"><b class="gold"><span class="num" data-count="100">100</span>%</b><span>отказов на вопросы-ловушки — без выдумок</span><div class="bar"><i data-w="100"></i></div></div>
+      <div class="card metric in" style="--d:4"><b class="sky-t"><span class="num" data-count="100">100</span>%</b><span>верных вердиктов проверки фактов</span><div class="bar"><i data-w="100"></i></div></div>
+      <div class="card metric in" style="--d:5"><b class="gold"><span class="num" data-count="100">100</span>%</b><span>вопросов на казахском пройдено</span><div class="bar"><i data-w="100"></i></div></div>
+    </div>
+    <div class="metric-foot in" style="--d:6"><span class="pill">⏱ ≈ 4,6 с на ответ</span><span class="pill">🧪 46 автотестов</span><span class="pill">📄 отчёт: docs/EVALUATION.md</span></div>
+  </section>
+
+  <!-- 12 -->
+  <section class="slide" data-notes="Безопасность и надёжность: защита от выдумок в два слоя, защита от prompt injection, очистка HTML, лимиты, защита бюджета. Персональные данные не храним — только хэш. Ключи — только в .env.">
+    <p class="eyebrow in" style="--d:0">Безопасность и надёжность</p>
+    <h2 class="in" style="--d:1">Доверять можно — <span class="gold">и это проверяемо</span></h2>
+    <div class="sec">
+      <div class="card in" style="--d:2"><div class="ic">🛡️</div><h3>Двойная защита от выдумок</h3><p>Порог релевантности + маркер «нет данных»; сервер убирает 📜, если статьи нет</p></div>
+      <div class="card in" style="--d:3"><div class="ic">🧱</div><h3>Prompt injection</h3><p>Документы и ввод — данные, а не команды; попытки пишутся в журнал</p></div>
+      <div class="card in" style="--d:4"><div class="ic">🔒</div><h3>Персональные данные</h3><p>IP и Telegram ID не храним — только солёный SHA-256 (Закон РК о ПД)</p></div>
+      <div class="card in" style="--d:5"><div class="ic">🧼</div><h3>Веб-защита</h3><p>CSP, DOMPurify, X-Frame-Options, валидация Pydantic</p></div>
+      <div class="card in" style="--d:6"><div class="ic">⏱️</div><h3>Лимиты</h3><p>Rate-limit без обхода через заголовки, дневной лимит бюджета LLM</p></div>
+      <div class="card in" style="--d:7"><div class="ic">🔑</div><h3>Секреты</h3><p>Ключи только в .env, вне репозитория; админка по токену</p></div>
+    </div>
+  </section>
+
+  <!-- 13 -->
+  <section class="slide" data-notes="Технологии: Python и FastAPI, нейросеть Claude от Anthropic, локальная мультиязычная модель поиска e5 — бесплатно и без передачи данных, SQLite, интерфейс без фреймворков, aiogram для Telegram, Docker и тесты.">
+    <p class="eyebrow in" style="--d:0">Технологии</p>
+    <h2 class="in" style="--d:1">Простая архитектура, <span class="grad">которую мы можем объяснить</span></h2>
+    <div class="stack">
+      <div class="card in" style="--d:2"><div class="lbl">LLM</div><div class="val">Claude (Anthropic)<small>Haiku 5.5 / Opus 5.5, потоковые ответы</small></div></div>
+      <div class="card in" style="--d:3"><div class="lbl">Поиск</div><div class="val">multilingual-e5 + BM25<small>локально, понимает казахский, RRF-слияние</small></div></div>
+      <div class="card in" style="--d:4"><div class="lbl">Backend</div><div class="val">Python 3.12 · FastAPI<small>SSE-стриминг, SQLite, Pydantic</small></div></div>
+      <div class="card in" style="--d:5"><div class="lbl">Frontend</div><div class="val">HTML · CSS · JS<small>без фреймворков, marked + DOMPurify, Web Speech API</small></div></div>
+      <div class="card in" style="--d:6"><div class="lbl">Telegram</div><div class="val">aiogram 3<small>тот же API, что и сайт</small></div></div>
+      <div class="card in" style="--d:7"><div class="lbl">Качество</div><div class="val">pytest · Docker<small>46 тестов + оценка на 47 вопросах</small></div></div>
+    </div>
+  </section>
+
+  <!-- 14 -->
+  <section class="slide" data-notes="Кому это полезно: гражданам — понять свои права и куда обратиться; школам и вузам — изучать Конституцию и ценности; госслужащим — этика и антикоррупционные ограничения; Центру «Адал қоғам» — аналитика того, что людям непонятно. Дальше: интеграция с eGov и 1414, новые законы, голос в Telegram.">
+    <p class="eyebrow in" style="--d:0">Польза для общества</p>
+    <h2 class="in" style="--d:1">Адал қоғам начинается с <span class="gold">честной информации</span></h2>
+    <div class="impact">
+      <div class="card in" style="--d:2"><div class="ic">👨‍👩‍👧</div><h3>Граждане</h3><p>Понять свои права, что делать при нарушении и куда обратиться</p></div>
+      <div class="card in" style="--d:3"><div class="ic">🎓</div><h3>Школы и вузы</h3><p>Изучать Конституцию и ценности через диалог и квиз</p></div>
+      <div class="card in" style="--d:4"><div class="ic">🏛️</div><h3>Госслужащие</h3><p>Этический кодекс, ограничения, конфликт интересов</p></div>
+      <div class="card in" style="--d:5"><div class="ic">📊</div><h3>«Адал қоғам»</h3><p>Аналитика: какие темы людям непонятны — и где нужна разъяснительная работа</p></div>
+    </div>
+    <div class="card road in" style="--d:6"><span class="lbl">Дальше →</span><div class="steps">
+      <span class="pill">Интеграция с eGov / 1414</span><span class="pill">Новые законы автоматически</span><span class="pill">Голос в Telegram</span><span class="pill">Школьный режим</span></div></div>
+  </section>
+
+  <!-- 15 -->
+  <section class="slide s-final" data-notes="Попробуйте прямо сейчас — наведите камеру на QR-код и задайте боту свой вопрос. Спасибо! Готовы ответить на вопросы.">
+    <p class="eyebrow in" style="--d:0">Попробуйте прямо сейчас</p>
+    <h2 class="in" style="--d:1"><span class="grad">Задайте свой вопрос</span></h2>
+    <div class="qrs">
+      <div class="card qr in" style="--d:2"><img src="qr-site.png" alt="QR сайта"><b>🌐 Сайт</b><span>lushly-mongrel-spoof.ngrok-free.dev</span></div>
+      <div class="card qr in" style="--d:3"><img src="qr-telegram.png" alt="QR Telegram"><b>🤖 Telegram</b><span>@adal_kenesshi_bot</span></div>
+      <div class="card qr in" style="--d:4"><img src="qr-github.png" alt="QR GitHub"><b>💻 GitHub</b><span>github.com/miras05/adal-kenesshi</span></div>
+    </div>
+    <p class="thanks in" style="--d:5">Рақмет! · Спасибо!</p>
+  </section>
+
+</div></div>
+
+<div class="brand-mini"><span class="shanyrak-slot"></span>Адал Кеңесші</div>
+<div class="nav"><button id="prev" aria-label="Назад">←</button><span class="count" id="count">1 / 15</span><button id="next" aria-label="Вперёд">→</button><button id="fs" aria-label="Полный экран">⛶</button></div>
+<div class="hint" id="hint">← → / пробел — листать · F — полный экран · N — заметки</div>
+<div class="notes" id="notes" hidden></div>
+
+<script>
+"use strict";
+// Шаңырақ — тот же символ, что в интерфейсе бота
+function shanyrak(draw) {
+  const uyk = Array.from({ length: 24 }, (_, i) => {
+    const a = (i * 15 * Math.PI) / 180, p = (r) => [(50 + Math.cos(a) * r).toFixed(2), (50 + Math.sin(a) * r).toFixed(2)];
+    const [x1, y1] = p(41.5), [x2, y2] = p(49);
+    return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+  }).join("");
+  return `<svg class="shanyrak${draw ? " draw" : ""}" viewBox="0 0 100 100" aria-hidden="true"><g class="uyk">${uyk}</g>
+    <circle class="core" cx="50" cy="50" r="33"/><circle class="ring" cx="50" cy="50" r="38"/><circle class="ring-in" cx="50" cy="50" r="33"/>
+    <g class="bars"><path d="M40 18.6Q36.5 50 40 81.4"/><path d="M50 17V83"/><path d="M60 18.6Q63.5 50 60 81.4"/>
+    <path d="M18.6 40Q50 36.5 81.4 40"/><path d="M17 50H83"/><path d="M18.6 60Q50 63.5 81.4 60"/></g></svg>`;
+}
+document.querySelectorAll(".shanyrak-slot").forEach((el) => { el.innerHTML = shanyrak(el.dataset.draw); });
+
+// Масштабирование сцены 1600×900 под экран
+const stage = document.getElementById("stage");
+function fit() { const s = Math.min(innerWidth / 1600, innerHeight / 900); stage.style.transform = `scale(${s})`; }
+addEventListener("resize", fit); fit();
+
+// Звёзды
+const cv = document.getElementById("stars"), cx = cv.getContext("2d");
+let stars = [];
+function initStars() {
+  cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio;
+  stars = Array.from({ length: 140 }, () => ({ x: Math.random() * cv.width, y: Math.random() * cv.height * .8, r: Math.random() * 1.3 + .3, p: Math.random() * 6.28 }));
+}
+function drawStars(t) {
+  cx.clearRect(0, 0, cv.width, cv.height);
+  for (const s of stars) { cx.globalAlpha = .25 + .45 * (1 + Math.sin(t / 1400 + s.p)) / 2; cx.beginPath(); cx.arc(s.x, s.y, s.r * devicePixelRatio, 0, 7); cx.fillStyle = "#fff"; cx.fill(); }
+  requestAnimationFrame(drawStars);
+}
+addEventListener("resize", initStars); initStars(); requestAnimationFrame(drawStars);
+
+// Навигация
+const slides = [...document.querySelectorAll(".slide")];
+const count = document.getElementById("count"), progress = document.getElementById("progress"), notes = document.getElementById("notes");
+let cur = Math.max(0, Math.min(slides.length - 1, (parseInt(location.hash.slice(1), 10) || 1) - 1));
+function countUp(el) {
+  const end = +el.dataset.count, t0 = performance.now();
+  const tick = (now) => { const p = Math.min(1, (now - t0) / 1300); el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3))); if (p < 1) requestAnimationFrame(tick); };
+  el.textContent = "0"; setTimeout(() => requestAnimationFrame(tick), 450);
+}
+function show(i) {
+  cur = Math.max(0, Math.min(slides.length - 1, i));
+  slides.forEach((s, k) => { s.classList.toggle("active", k === cur); s.classList.toggle("past", k < cur); });
+  const s = slides[cur];
+  s.querySelectorAll("[data-count]").forEach(countUp);
+  s.querySelectorAll(".metric .bar i").forEach((b) => { b.style.width = "0"; setTimeout(() => { b.style.width = b.dataset.w + "%"; }, 600); });
+  count.textContent = `${cur + 1} / ${slides.length}`;
+  progress.style.width = `${((cur + 1) / slides.length) * 100}%`;
+  notes.innerHTML = `<b>Заметки докладчика · слайд ${cur + 1}</b>${s.dataset.notes || ""}`;
+  history.replaceState(null, "", `#${cur + 1}`);
+}
+const next = () => show(cur + 1), prev = () => show(cur - 1);
+document.getElementById("next").onclick = next;
+document.getElementById("prev").onclick = prev;
+document.getElementById("fs").onclick = () => (document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.());
+addEventListener("keydown", (e) => {
+  if (["ArrowRight", "PageDown", " ", "Enter"].includes(e.key)) { e.preventDefault(); next(); }
+  else if (["ArrowLeft", "PageUp", "Backspace"].includes(e.key)) { e.preventDefault(); prev(); }
+  else if (e.key === "Home") show(0); else if (e.key === "End") show(slides.length - 1);
+  else if (e.key.toLowerCase() === "f" || e.key.toLowerCase() === "а") document.getElementById("fs").click();
+  else if (e.key.toLowerCase() === "n" || e.key.toLowerCase() === "т") notes.hidden = !notes.hidden;
+});
+let tx = null;
+addEventListener("touchstart", (e) => { tx = e.touches[0].clientX; }, { passive: true });
+addEventListener("touchend", (e) => { if (tx === null) return; const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 50) (dx < 0 ? next : prev)(); tx = null; });
+setTimeout(() => { document.getElementById("hint").style.opacity = 0; }, 6000);
+show(cur);
+</script>
+</body>
+</html>
