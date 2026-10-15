@@ -34,7 +34,7 @@ MODELS_DIR = DATA_DIR / "models"
 EMBED_MODEL = os.getenv("EMBED_MODEL", "intfloat/multilingual-e5-large")
 TOP_K = _int("TOP_K", 8)
 # Ниже этого порога (косинусная близость e5) считаем, что в базе ответа нет
-MIN_RELEVANCE = _float("MIN_RELEVANCE", 0.80)
+MIN_RELEVANCE = _float("MIN_RELEVANCE", 0.77)
 
 # --- Сервер / безопасность ---
 DB_PATH = Path(os.getenv("DB_PATH", DATA_DIR / "app.db"))
