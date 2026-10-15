@@ -87,9 +87,9 @@ class Retriever:
 
         self.bm25 = BM25Okapi([bm25_terms(f"{chunk_header(c)} {c['text']}") for c in chunks])
         self.const_idx = np.array([i for i, c in enumerate(chunks) if c["type"] == "constitution"])
-        # быстрый доступ к статье Конституции на другом языке
-        self.by_article = {(c["lang"], c["article"], c["id"].rsplit(".", 1)[-1]): i
-                           for i, c in enumerate(chunks) if c["type"] == "constitution"}
+        # быстрый доступ к той же статье Конституции/закона на другом языке
+        self.by_article = {(c["doc_id"], c["lang"], c["article"], c["id"].rsplit(".", 1)[-1]): i
+                           for i, c in enumerate(chunks) if c.get("article")}
 
     def search(self, query: str, k: int = config.TOP_K, lang: str | None = None) -> list[Hit]:
         lang = lang or detect_lang(query)
@@ -125,11 +125,11 @@ class Retriever:
         return hits
 
     def _same_article_in_lang(self, i: int, lang: str) -> int:
-        """Статью Конституции показываем на языке пользователя."""
+        """Статью Конституции или закона показываем на языке пользователя."""
         c = self.chunks[i]
-        if c["type"] != "constitution" or c["lang"] == lang:
+        if not c.get("article") or c["lang"] == lang:
             return i
-        other = self.by_article.get((lang, self._kk_ru_article(c["article"], lang), c["id"].rsplit(".", 1)[-1]))
+        other = self.by_article.get((c["doc_id"], lang, self._kk_ru_article(c["article"], lang), c["id"].rsplit(".", 1)[-1]))
         return other if other is not None else i
 
     @staticmethod

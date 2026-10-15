@@ -35,6 +35,7 @@ CONCEPTS = json.loads((config.DATA_DIR / "concepts.json").read_text(encoding="ut
 user_lang: dict[int, str] = {}
 history: dict[int, deque] = defaultdict(lambda: deque(maxlen=6))
 busy: set[int] = set()
+next_mode: dict[int, str] = {}   # режим для следующего сообщения: situation | factcheck
 last_questions: dict[int, str] = {}
 
 TEXT = {
@@ -45,7 +46,14 @@ TEXT = {
                   "«Адал азамат», «Закон и Порядок», «Таза Қазақстан» и др.\n\n"
                   "✅ Только по официальным документам\n🔗 Со ссылками на первоисточник\n"
                   "🛡 Если ответа нет в документах — честно скажу об этом\n\n"
-                  "Просто напишите вопрос. Команды: /values — ценности, /quiz — викторина, /lang — язык."),
+                  "Просто напишите вопрос. Команды:\n"
+                  "/situation — 🧭 что делать в моей ситуации (например, просят взятку)\n"
+                  "/check — 🔎 проверить факт или новость по документам\n"
+                  "/values — ценности, /quiz — викторина, /lang — язык."),
+        "ask_situation": "🧭 Опишите вашу ситуацию одним сообщением. Например: «Сотрудник госоргана намекает, что справку выдадут быстрее за деньги».",
+        "ask_check": "🔎 Пришлите утверждение или новость, которую нужно проверить по официальным документам.",
+        "verdict": {"TRUE": "✅ Подтверждается документами", "FALSE": "❌ Не соответствует документам",
+                    "PARTIAL": "⚠️ Частично верно или неточно", "UNKNOWN": "❓ Нет данных для проверки"},
         "thinking": "🔎 Ищу в официальных документах…",
         "sources": "Источники",
         "values": "Принципы и ценности внутренней политики (Указ № 1081). Выберите, чтобы узнать подробнее:",
@@ -65,7 +73,14 @@ TEXT = {
                   "«Таза Қазақстан» құндылықтары туралы сұрақтарға жауап беремін.\n\n"
                   "✅ Тек ресми құжаттар негізінде\n🔗 Бастапқы дереккөзге сілтемемен\n"
                   "🛡 Құжаттарда жауап болмаса — ашық айтамын\n\n"
-                  "Сұрағыңызды жазыңыз. Командалар: /values — құндылықтар, /quiz — викторина, /lang — тіл."),
+                  "Сұрағыңызды жазыңыз. Командалар:\n"
+                  "/situation — 🧭 менің жағдайымда не істеу керек (мысалы, пара сұрап отыр)\n"
+                  "/check — 🔎 фактіні немесе жаңалықты құжаттар бойынша тексеру\n"
+                  "/values — құндылықтар, /quiz — викторина, /lang — тіл."),
+        "ask_situation": "🧭 Жағдайыңызды бір хабарламамен сипаттаңыз. Мысалы: «Мемлекеттік қызметші анықтаманы ақшаға тез беретінін меңзеп отыр».",
+        "ask_check": "🔎 Ресми құжаттар бойынша тексеру керек тұжырымды немесе жаңалықты жіберіңіз.",
+        "verdict": {"TRUE": "✅ Құжаттармен расталады", "FALSE": "❌ Құжаттарға сәйкес келмейді",
+                    "PARTIAL": "⚠️ Ішінара дұрыс немесе нақты емес", "UNKNOWN": "❓ Тексеруге дерек жоқ"},
         "thinking": "🔎 Ресми құжаттардан іздеп жатырмын…",
         "sources": "Дереккөздер",
         "values": "Ішкі саясаттың қағидаттары мен құндылықтары (№ 1081 Жарлық). Толығырақ білу үшін таңдаңыз:",
@@ -151,6 +166,18 @@ async def concept_clicked(cb: CallbackQuery):
         await answer_question(cb.message, cb.from_user.id, c[lang_of(cb.from_user.id)]["question"])
 
 
+@router.message(Command("situation", "check"))
+async def set_mode(message: Message):
+    lang = lang_of(message.from_user.id)
+    cmd, _, rest = message.text.partition(" ")
+    mode = "situation" if cmd.lstrip("/").startswith("situation") else "factcheck"
+    if rest.strip():  # «/check текст» — сразу проверяем
+        await answer_question(message, message.from_user.id, rest.strip(), mode)
+        return
+    next_mode[message.from_user.id] = mode
+    await message.answer(TEXT[lang]["ask_situation" if mode == "situation" else "ask_check"])
+
+
 @router.message(Command("quiz"))
 async def quiz(message: Message):
     lang = lang_of(message.from_user.id)
@@ -186,21 +213,22 @@ async def feedback(cb: CallbackQuery):
 
 @router.message(F.text & ~F.text.startswith("/"))
 async def on_text(message: Message):
-    await answer_question(message, message.from_user.id, message.text)
+    uid = message.from_user.id
+    await answer_question(message, uid, message.text, next_mode.pop(uid, "ask"))
 
 
-async def answer_question(message: Message, uid: int, question: str):
+async def answer_question(message: Message, uid: int, question: str, mode: str = "ask"):
     lang = lang_of(uid, question)
     if uid in busy:
         await message.answer(TEXT[lang]["busy"])
         return
     busy.add(uid)
     reply = await message.answer(TEXT[lang]["thinking"])
-    text, sources, done, error = "", [], None, None
+    text, sources, done, error, verdict = "", [], None, None, None
     last_edit = 0.0
     try:
         async with httpx.AsyncClient(base_url=config.API_URL, timeout=httpx.Timeout(90, connect=5)) as client:
-            payload = {"question": question, "history": list(history[uid]), "lang": lang}
+            payload = {"question": question, "history": list(history[uid]), "lang": lang, "mode": mode}
             async with client.stream("POST", "/api/chat", json=payload, headers=api_headers(uid)) as resp:
                 if resp.status_code == 429:
                     error = (await resp.aread()).decode()
@@ -216,11 +244,14 @@ async def answer_question(message: Message, uid: int, question: str):
                             text += ev["text"]
                             if time.monotonic() - last_edit > 1.2:  # не чаще ~1 раза в секунду (лимиты Telegram)
                                 last_edit = time.monotonic()
-                                await safe_edit(reply, md_to_tg(text) + " ▌")
+                                head = f"<b>{TEXT[lang]['verdict'][verdict]}</b>\n\n" if verdict else ""
+                                await safe_edit(reply, head + md_to_tg(text) + " ▌")
                         elif ev["type"] == "replace":
                             text = ev["text"]
                             if not ev.get("keep_sources"):
                                 sources = []
+                        elif ev["type"] == "verdict":
+                            verdict = ev["value"]
                         elif ev["type"] == "done":
                             done = ev
                         elif ev["type"] == "error":
@@ -236,6 +267,8 @@ async def answer_question(message: Message, uid: int, question: str):
         return
 
     body = md_to_tg(text)
+    if verdict:
+        body = f"<b>{TEXT[lang]['verdict'][verdict]}</b>\n\n{body}"
     kb = InlineKeyboardBuilder()
     n_src = 0
     if done and done.get("answered"):

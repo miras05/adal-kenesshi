@@ -237,3 +237,47 @@ def test_law_split_by_articles_with_chapters():
     assert chunks[1].text.startswith("Статья 1. Основные понятия")
     kk = {**law, "lang": "kk", "text": "1-тарау. ЖАЛПЫ ЕРЕЖЕЛЕР\n1-бап. Негізгі ұғымдар\nМәтін\n2-1-бап. Қосымша\nМәтін"}
     assert [c.article for c in chunk_law(kk)] == ["1", "2-1"]
+
+
+# ---------- Режимы: проверка факта и «моя ситуация» ----------
+
+def test_factcheck_verdict_is_parsed_and_hidden(monkeypatch, no_db):
+    monkeypatch.setattr(service, "_retriever", FakeRetriever(0.9))
+    monkeypatch.setattr(llm, "stream_answer", fake_stream("[[VERDICT:", "FALSE]]\n\n**Вердикт.** Неверно [1]."))
+    events = run(service.answer("Президент избирается на 5 лет", mode="factcheck"))
+    assert {"type": "verdict", "value": "FALSE"} in events
+    text = "".join(e["text"] for e in events if e["type"] == "delta")
+    assert "VERDICT" not in text and text.startswith("**Вердикт.**")
+    assert events[-1]["verdict"] == "FALSE"
+
+
+def test_factcheck_low_relevance_gives_unknown(monkeypatch, no_db):
+    monkeypatch.setattr(service, "_retriever", FakeRetriever(0.5))
+    events = run(service.answer("С 2027 года отменят ЕНТ", mode="factcheck"))
+    assert {"type": "verdict", "value": "UNKNOWN"} in events
+    assert events[-1]["answered"] is False
+
+
+def test_situation_mode_expands_query_with_legal_terms(monkeypatch, no_db):
+    seen = {}
+
+    class Spy(FakeRetriever):
+        def search(self, q, k, lang):
+            seen["q"] = q
+            return super().search(q, k, lang)
+
+    async def fake_complete(prompt, **kw):
+        return "вымогательство взятки, сообщение о коррупционном правонарушении"
+
+    monkeypatch.setattr(service, "_retriever", Spy(0.9))
+    monkeypatch.setattr(llm, "complete", fake_complete)
+    monkeypatch.setattr(llm, "stream_answer", fake_stream("**Коротко** ... [1]"))
+    events = run(service.answer("Намекают на деньги за справку", mode="situation"))
+    assert "вымогательство взятки" in seen["q"]
+    assert events[0]["type"] == "sources" and events[0]["search_query"] is None  # пользователю — его вопрос
+
+
+def test_best_quotes_picks_supporting_sentence():
+    chunk = {"text": "1. Курултай состоит из ста сорока пяти депутатов. 2. Срок полномочий депутатов Курултая – пять лет."}
+    quotes = service.best_quotes("Срок полномочий депутатов — пять лет [1].", [Hit(chunk, 0.9)], [1])
+    assert quotes[1].startswith("Срок полномочий депутатов Курултая")

@@ -69,10 +69,14 @@ sequenceDiagram
 
 **SSE вместо WebSocket.** Поток идёт в одну сторону (сервер → клиент), SSE проще, работает через обычный HTTP и прокси.
 
+**Режимы.** `ask` — вопрос; `situation` — бытовое описание сначала переводится в юридические термины (дешёвый вызов Haiku), поиск идёт по обоим вариантам, ответ строится по шаблону «нормы → действия → каналы → права»; `factcheck` — модель обязана начать со служебной метки `[[VERDICT:…]]`, сервер вырезает её из потока и отдаёт отдельным событием `verdict`.
+
+**Evidence mode.** После ответа сервер для каждой ссылки `[n]` находит в фрагменте-источнике предложение с наибольшим пересечением слов с утверждением ответа и строит ссылку `#:~:text=` прямо на это предложение.
+
 ## 4. Модель данных (SQLite)
 
 ```sql
-queries(id, ts, user_hash, channel, lang, question, answered, top_score, latency_ms, model, tokens_in, tokens_out, error)
+queries(id, ts, user_hash, channel, lang, question, mode, answered, top_score, latency_ms, model, tokens_in, tokens_out, error)
 feedback(query_id → queries.id, value ±1, ts)
 quiz_results(id, ts, user_hash, nickname, score, total)
 ```

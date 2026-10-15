@@ -335,6 +335,32 @@ main { flex: 1; display: flex; min-height: 0; min-width: 0; width: 100%; max-wid
 .meta .const-flag { color: var(--gold-ink); font-weight: 700; }
 .status-line { font-size: 12.5px; color: var(--muted); margin: 6px 0 0; }
 
+/* ---------- Режимы ---------- */
+.modes { position: relative; display: flex; gap: 2px; align-self: center; margin-top: 8px; padding: 4px; border-radius: 16px; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); max-width: 100%; }
+.mode { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 6px; border: 0; background: none; padding: 7px 14px; border-radius: 12px; font-size: 13.5px; font-weight: 600; color: var(--muted); white-space: nowrap; transition: color .3s; }
+.mode:hover { color: var(--text); }
+.mode.active { color: var(--text); }
+.mode-ind { position: absolute; z-index: 0; top: 4px; bottom: 4px; left: 0; width: 0; border-radius: 12px; background: var(--gold-soft); border: 1px solid color-mix(in srgb, var(--gold) 55%, transparent); transition: transform .45s var(--spring), width .45s var(--spring); }
+.msg.user .mode-tag { display: block; font-size: 11.5px; font-weight: 700; opacity: .85; margin-bottom: 2px; }
+
+/* Вердикт проверки факта */
+.verdict { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding: 10px 14px; border-radius: 14px; font-weight: 700; font-size: 15px; animation: pop-in .5s var(--spring) both; border: 1px solid transparent; }
+.verdict .v-ic { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; flex: none; color: #fff; font-size: 15px; }
+.verdict small { display: block; font-weight: 500; font-size: 12px; color: var(--muted); }
+.verdict.TRUE { background: color-mix(in srgb, var(--ok) 13%, transparent); border-color: color-mix(in srgb, var(--ok) 40%, transparent); }
+.verdict.TRUE .v-ic { background: var(--ok); }
+.verdict.FALSE { background: color-mix(in srgb, var(--danger) 12%, transparent); border-color: color-mix(in srgb, var(--danger) 40%, transparent); }
+.verdict.FALSE .v-ic { background: var(--danger); }
+.verdict.PARTIAL { background: var(--gold-soft); border-color: color-mix(in srgb, var(--gold) 50%, transparent); }
+.verdict.PARTIAL .v-ic { background: var(--gold); color: #2A1F00; }
+.verdict.UNKNOWN { background: var(--surface-2); border-color: var(--border-strong); }
+.verdict.UNKNOWN .v-ic { background: var(--muted); }
+
+/* Цитата-доказательство */
+.evidence { margin: 6px 0 8px; padding: 8px 11px; border-left: 3px solid var(--gold); border-radius: 0 10px 10px 0; background: var(--gold-soft); font-size: 12.8px; line-height: 1.5; }
+.evidence b { display: block; font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--gold-ink); margin-bottom: 2px; }
+.src-chip.has-quote::after { content: "❝"; color: var(--gold-ink); margin-left: 2px; }
+
 /* ---------- Поле ввода ---------- */
 .composer { position: relative; margin-top: 6px; padding: 1.5px; border-radius: 24px; background: var(--border-strong); box-shadow: var(--shadow-lg); }
 .composer::before {
@@ -450,6 +476,7 @@ main { flex: 1; display: flex; min-height: 0; min-width: 0; width: 100%; max-wid
   .doc { grid-template-columns: 1fr; }
   .quiz { padding: 20px 16px; }
   .orb-wrap { width: 104px; height: 104px; }
+  .mode { padding: 7px 9px; font-size: 12.5px; gap: 4px; }
   .orb { width: 92px; height: 92px; }
 }
 @media (prefers-reduced-motion: reduce) {

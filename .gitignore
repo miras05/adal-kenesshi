@@ -16,3 +16,4 @@ data/*.db-journal
 
 # Документы организаторов
 *.docx
+data/eval.db

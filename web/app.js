@@ -13,7 +13,14 @@ const I18N = {
     hero1: "Честные ответы", hero2: "о главном в стране",
     hero_lead: "Спросите, например:",
     stat1: "статей Конституции", stat2: "официальных документов", stat3: "фрагментов в базе", stat4: "языка: қазақша, русский",
-    placeholder: "Спросите о Конституции, ценностях, Посланиях…",
+    ph_ask: "Спросите о Конституции, законах, ценностях, Посланиях…",
+    ph_situation: "Опишите ситуацию: например, «сотрудник госоргана намекает на взятку за справку»",
+    ph_factcheck: "Вставьте утверждение или новость для проверки по официальным документам",
+    mode_ask: "Вопрос", mode_situation: "Моя ситуация", mode_factcheck: "Проверка факта",
+    v_TRUE: "Подтверждается документами", v_FALSE: "Не соответствует документам",
+    v_PARTIAL: "Частично верно или неточно", v_UNKNOWN: "Нет данных для проверки",
+    v_hint: "Проверено по официальным документам базы",
+    evidence: "Цитата-доказательство", step_terms: "Перевожу ситуацию на язык закона",
     disclaimer: "Бот не является государственным органом. Ответы формируются по официальным документам; для юридически значимых решений сверяйтесь с первоисточником.",
     concepts_eyebrow: "Указ № 1081 от 5 ноября 2025 г.",
     concepts_title: "Принципы и ценности внутренней политики",
@@ -47,11 +54,13 @@ const I18N = {
     types: { constitution: "Конституция", decree: "Указ", address: "Послание", speech: "Выступление", concept: "Статья", law: "Закон" },
     suggestions: [
       ["📜", "Конституция 2026", "Какие принципы закреплены в статье 3 Конституции?", true],
+      ["🧭", "Моя ситуация", "Сотрудник госоргана намекает, что справку выдадут быстрее за деньги. Что делать?", false, "situation"],
       ["⚖️", "Закон и Порядок", "Что такое «Закон и Порядок» и закреплён ли он в Конституции?", true],
+      ["🔎", "Проверка факта", "«По новой Конституции Президент избирается на 5 лет и может переизбираться»", false, "factcheck"],
+      ["🛡️", "Антикоррупция", "Что такое коррупция и конфликт интересов по закону РК?"],
       ["🤝", "Ценности", "Кто такой «Адал азамат»?"],
       ["🏛️", "Курултай", "Как устроен Курултай по новой Конституции?"],
       ["👂", "Принципы", "Что означает «Слышащее государство» на практике?"],
-      ["🛡️", "Антикоррупция", "Что такое коррупция и конфликт интересов по закону РК?"],
     ],
   },
   kk: {
@@ -61,7 +70,14 @@ const I18N = {
     hero1: "Елдің басты құжаттары", hero2: "туралы адал жауаптар",
     hero_lead: "Мысалы, сұраңыз:",
     stat1: "Конституция бабы", stat2: "ресми құжат", stat3: "базадағы үзінді", stat4: "тіл: қазақша, орысша",
-    placeholder: "Конституция, құндылықтар, Жолдаулар туралы сұраңыз…",
+    ph_ask: "Конституция, заңдар, құндылықтар, Жолдаулар туралы сұраңыз…",
+    ph_situation: "Жағдайды сипаттаңыз: мысалы, «мемлекеттік қызметші анықтама үшін пара сұрап отыр»",
+    ph_factcheck: "Ресми құжаттар бойынша тексеру үшін тұжырымды немесе жаңалықты қойыңыз",
+    mode_ask: "Сұрақ", mode_situation: "Менің жағдайым", mode_factcheck: "Фактіні тексеру",
+    v_TRUE: "Құжаттармен расталады", v_FALSE: "Құжаттарға сәйкес келмейді",
+    v_PARTIAL: "Ішінара дұрыс немесе нақты емес", v_UNKNOWN: "Тексеруге дерек жоқ",
+    v_hint: "Базадағы ресми құжаттар бойынша тексерілді",
+    evidence: "Дәлел-үзінді", step_terms: "Жағдайды заң тіліне аударып жатырмын",
     disclaimer: "Бот мемлекеттік орган емес. Жауаптар ресми құжаттар негізінде беріледі; заңдық маңызы бар шешімдер үшін бастапқы дереккөзді тексеріңіз.",
     concepts_eyebrow: "2025 жылғы 5 қарашадағы № 1081 Жарлық",
     concepts_title: "Ішкі саясаттың қағидаттары мен құндылықтары",
@@ -95,11 +111,13 @@ const I18N = {
     types: { constitution: "Конституция", decree: "Жарлық", address: "Жолдау", speech: "Сөз", concept: "Мақала", law: "Заң" },
     suggestions: [
       ["📜", "2026 Конституциясы", "Конституцияның 3-бабында қандай қағидаттар бекітілген?", true],
+      ["🧭", "Менің жағдайым", "Мемлекеттік қызметші анықтаманы ақшаға тез беретінін меңзеп отыр. Не істеуім керек?", false, "situation"],
       ["⚖️", "Заң мен Тәртіп", "«Заң мен Тәртіп» деген не және ол Конституцияда бекітілген бе?", true],
+      ["🔎", "Фактіні тексеру", "«Жаңа Конституция бойынша Президент 5 жылға сайланады және қайта сайлана алады»", false, "factcheck"],
+      ["🛡️", "Сыбайлас жемқорлық", "Заң бойынша сыбайлас жемқорлық және мүдделер қақтығысы дегеніміз не?"],
       ["🤝", "Құндылықтар", "«Адал азамат» дегеніміз кім?"],
       ["🏛️", "Құрылтай", "Жаңа Конституция бойынша Құрылтай қалай құрылады?"],
       ["👂", "Қағидаттар", "«Халық үніне құлақ асатын мемлекет» іс жүзінде нені білдіреді?"],
-      ["🛡️", "Сыбайлас жемқорлық", "Заң бойынша сыбайлас жемқорлық және мүдделер қақтығысы дегеніміз не?"],
     ],
   },
 };
@@ -111,6 +129,7 @@ const state = {
   lang: safeGet("lang") || "ru",
   history: [],          // последние реплики для контекста диалога
   controller: null,     // AbortController текущего запроса
+  mode: "ask",          // ask | situation | factcheck
   loaded: {},
 };
 
@@ -169,6 +188,7 @@ function applyLang() {
   $(".lang-switch").dataset.pos = state.lang === "kk" ? "0" : "1";
   renderSuggestions();
   startTyper();
+  setMode(state.mode);
   state.loaded = {};  // перерисовать вкладки на новом языке
   const active = $(".tab.active").dataset.tab;
   if (active !== "chat") loadTab(active);
@@ -204,6 +224,18 @@ function loadTab(name) {
   if (name === "sources") loadSources();
 }
 
+// ---------- Режимы: вопрос / моя ситуация / проверка факта ----------
+function setMode(mode) {
+  state.mode = mode;
+  $$(".mode").forEach((b) => { b.classList.toggle("active", b.dataset.mode === mode); b.setAttribute("aria-selected", b.dataset.mode === mode); });
+  input.placeholder = t("ph_" + mode);
+  const a = $(".mode.active"), ind = $(".mode-ind");
+  if (a && ind) { ind.style.width = a.offsetWidth + "px"; ind.style.transform = `translateX(${a.offsetLeft}px)`; }
+}
+$$(".mode").forEach((b) => b.addEventListener("click", () => { setMode(b.dataset.mode); input.focus(); }));
+addEventListener("resize", () => setMode(state.mode));
+document.fonts?.ready.then(() => setMode(state.mode));
+
 // ---------- Подсветка карточек под курсором ----------
 document.addEventListener("pointermove", (e) => {
   const card = e.target.closest?.(".chip, .concept");
@@ -217,13 +249,13 @@ document.addEventListener("pointermove", (e) => {
 function renderSuggestions() {
   const box = $("#suggestions");
   if (!box) return;
-  box.innerHTML = I18N[state.lang].suggestions.map(([icon, label, q, gold], i) => `
-    <button class="chip ${gold ? "gold" : ""}" style="--i:${i}" data-q="${esc(q)}">
+  box.innerHTML = I18N[state.lang].suggestions.map(([icon, label, q, gold, mode], i) => `
+    <button class="chip ${gold ? "gold" : ""}" style="--i:${i}" data-q="${esc(q)}" data-mode="${mode || "ask"}">
       <span class="chip-top"><span class="chip-cat">${esc(label)}</span><span class="chip-ic">${icon}</span></span>
       <span class="chip-q">${esc(q)}</span>
       <span class="chip-go" aria-hidden="true">→</span>
     </button>`).join("");
-  $$(".chip", box).forEach((b) => b.addEventListener("click", () => ask(b.dataset.q)));
+  $$(".chip", box).forEach((b) => b.addEventListener("click", () => { setMode(b.dataset.mode); ask(b.dataset.q); }));
 }
 
 let typerRun = 0;
@@ -231,7 +263,7 @@ async function startTyper() {
   const el = $("#typer");
   if (!el) return;
   const run = ++typerRun;
-  const qs = I18N[state.lang].suggestions.map((s) => s[2]);
+  const qs = I18N[state.lang].suggestions.filter((s) => !s[4]).map((s) => s[2]);
   if (reduceMotion) { el.textContent = qs[0]; return; }
   for (let k = 0; run === typerRun && document.contains(el); k = (k + 1) % qs.length) {
     const q = qs[k];
@@ -288,11 +320,12 @@ function setBusy(busy) {
 
 function scrollDown() { messagesEl.scrollTop = messagesEl.scrollHeight; }
 
-function addUserMsg(text) {
+function addUserMsg(text, mode) {
   const el = document.createElement("div");
   el.className = "msg user";
-  el.innerHTML = `<div class="bubble"></div>`;
-  el.firstChild.textContent = text;
+  const tag = mode !== "ask" ? `<span class="mode-tag">${mode === "situation" ? "🧭" : "🔎"} ${esc(t("mode_" + mode))}</span>` : "";
+  el.innerHTML = `<div class="bubble">${tag}<span class="utext"></span></div>`;
+  $(".utext", el).textContent = text;
   messagesEl.appendChild(el);
 }
 
@@ -301,7 +334,7 @@ function addBotMsg() {
   el.className = "msg bot thinking busy streaming";
   el.innerHTML = `
     <span class="avatar shanyrak-slot">${shanyrakSVG()}</span>
-    <div class="bubble"><div class="steps"></div><div class="answer"></div><div class="extra"></div></div>`;
+    <div class="bubble"><div class="steps"></div><div class="verdict-slot"></div><div class="answer"></div><div class="extra"></div></div>`;
   messagesEl.appendChild(el);
   return el;
 }
@@ -322,6 +355,12 @@ function finishStep(row, text) {
   if (text) row.lastChild.textContent = text;
 }
 
+const VERDICT_ICONS = { TRUE: "✓", FALSE: "✕", PARTIAL: "≈", UNKNOWN: "?" };
+function renderVerdict(slot, v) {
+  slot.innerHTML = `<div class="verdict ${v}" role="status"><span class="v-ic">${VERDICT_ICONS[v] || "?"}</span>
+    <span>${esc(t("v_" + v))}<small>${esc(t("v_hint"))}</small></span></div>`;
+}
+
 /** Markdown → безопасный HTML, затем [n] → кликабельные ссылки на источники */
 function renderAnswer(container, text, sourcesCount) {
   container.innerHTML = DOMPurify.sanitize(marked.parse(text, { breaks: true }));
@@ -333,12 +372,14 @@ function renderAnswer(container, text, sourcesCount) {
   if (!sourcesCount) return;
   const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
   const nodes = [];
-  while (walker.nextNode()) if (/\[\d{1,2}(?:,\s*\d{1,2})*\]/.test(walker.currentNode.nodeValue)) nodes.push(walker.currentNode);
+  // [3], [1, 2], а также [1, п. 2] / [1, ст. 12] — кнопки по номерам, уточнение видно в карточке источника
+  const CITE = /(\[\d{1,2}(?:\s*,\s*\d{1,2})*(?:,[^\][]{0,80})?\])/;
+  while (walker.nextNode()) if (CITE.test(walker.currentNode.nodeValue)) nodes.push(walker.currentNode);
   for (const node of nodes) {
     const frag = document.createDocumentFragment();
-    node.nodeValue.split(/(\[\d{1,2}(?:,\s*\d{1,2})*\])/).forEach((part) => {
-      const m = part.match(/^\[([\d,\s]+)\]$/);
-      if (!m) { frag.appendChild(document.createTextNode(part)); return; }
+    node.nodeValue.split(CITE).forEach((part) => {
+      const m = part.match(/^\[(\d{1,2}(?:\s*,\s*\d{1,2})*)/);
+      if (!m || !CITE.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
       m[1].split(",").map((x) => +x.trim()).forEach((n) => {
         if (n < 1 || n > sourcesCount) return;
         const b = document.createElement("button");
@@ -357,20 +398,23 @@ function srcWhere(s) {
   return state.lang === "kk" ? `${s.article}-${L.article}` : `${L.article} ${s.article}`;
 }
 
-function sourceCard(s, cited) {
+function sourceCard(s, cited, quote) {
   const L = I18N[state.lang];
   const where = srcWhere(s);
+  const body = quote
+    ? `<div class="evidence"><b>${esc(t("evidence"))}</b>«${esc(quote.text)}»</div>`
+    : `<div class="src-snippet">${esc(s.snippet)}</div>`;
   return `
     <div class="src ${cited ? "cited" : ""}" data-n="${s.n}">
       <div class="src-head"><span class="src-n">[${s.n}]</span>
         <span class="src-type ${s.is_constitution ? "const" : ""}">${esc(L.types[s.type] || s.type)}${where ? " · " + esc(where) : ""}${s.date ? " · " + esc(s.date) : ""}</span></div>
       <div class="src-title">${esc(s.title)}</div>
-      <div class="src-snippet">${esc(s.snippet)}</div>
-      <a href="${esc(s.link)}" target="_blank" rel="noopener noreferrer">${esc(t("open_src"))}</a>
+      ${body}
+      <a href="${esc(quote ? quote.link : s.link)}" target="_blank" rel="noopener noreferrer">${esc(t("open_src"))}</a>
     </div>`;
 }
 
-function renderSources(extra, sources, cited) {
+function renderSources(extra, sources, cited, quotes = {}) {
   if (!sources.length) return;
   const L = I18N[state.lang];
   const citedSet = new Set(cited);
@@ -378,7 +422,7 @@ function renderSources(extra, sources, cited) {
   const ordered = [...main, ...sources.filter((s) => !main.includes(s))];
   // Короткие «чипы» процитированных источников; полные карточки — по клику
   const chips = main.map((s, i) => `
-    <button type="button" class="src-chip ${s.is_constitution ? "const" : ""}" style="--i:${i}" data-n="${s.n}">
+    <button type="button" class="src-chip ${s.is_constitution ? "const" : ""} ${quotes[s.n] ? "has-quote" : ""}" style="--i:${i}" data-n="${s.n}">
       <b>${s.n}</b> ${s.is_constitution ? "📜 " : ""}${esc(L.types[s.type] || s.type)}${srcWhere(s) ? " · " + esc(srcWhere(s)) : ""}${!s.is_constitution && s.date ? " · " + esc(s.date.split(",")[0]) : ""}
     </button>`).join("");
   const box = document.createElement("div");
@@ -386,7 +430,7 @@ function renderSources(extra, sources, cited) {
     <div class="src-chips">${chips}</div>
     <details class="sources">
       <summary>${esc(t("sources", { n: sources.length }))}</summary>
-      <div class="src-list">${ordered.map((s) => sourceCard(s, citedSet.has(s.n))).join("")}</div>
+      <div class="src-list">${ordered.map((s) => sourceCard(s, citedSet.has(s.n), quotes[s.n])).join("")}</div>
     </details>`;
   extra.appendChild(box);
 }
@@ -435,14 +479,16 @@ messagesEl.addEventListener("click", (e) => {
 
 async function ask(raw) {
   const question = String(raw || "").trim();
+  const mode = state.mode;
   if (!question || state.controller) return;
   if (!$("#tab-chat").classList.contains("active")) switchTab("chat");
   const welcome = $("#welcome");
   if (welcome) { typerRun++; welcome.remove(); }
   input.value = ""; autoGrow();
-  addUserMsg(question);
+  addUserMsg(question, mode);
   const el = addBotMsg();
-  const stepsEl = $(".steps", el), answerEl = $(".answer", el), extra = $(".extra", el);
+  const stepsEl = $(".steps", el), answerEl = $(".answer", el), extra = $(".extra", el), verdictSlot = $(".verdict-slot", el);
+  if (mode === "situation") finishStep(addStep(stepsEl, ""), t("step_terms"));
   let stepSearch = addStep(stepsEl, t("step_search")), stepWrite = null;
   scrollDown();
 
@@ -455,7 +501,7 @@ async function ask(raw) {
     const resp = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question, history: state.history.slice(-6), lang: state.lang }),
+      body: JSON.stringify({ question, history: state.history.slice(-6), lang: state.lang, mode }),
       signal: state.controller.signal,
     });
     if (!resp.ok) {
@@ -492,6 +538,8 @@ async function ask(raw) {
           text = ev.text;
           if (!ev.keep_sources) { sources = []; answerEl.classList.add("no-info"); }
           if (!pending) { pending = true; requestAnimationFrame(paint); }
+        } else if (ev.type === "verdict") {
+          renderVerdict(verdictSlot, ev.value);
         } else if (ev.type === "done") {
           done = ev;
         } else if (ev.type === "error") {
@@ -504,7 +552,7 @@ async function ask(raw) {
     if (done && !done.answered) { answerEl.classList.add("no-info"); sources = []; }
     stepsEl.classList.add("collapsed");
     if (done) {
-      renderSources(extra, sources, done.cited);
+      renderSources(extra, sources, done.cited, done.quotes || {});
       renderActions(extra, done, text, done.cited.length);
       state.history.push({ role: "user", content: question }, { role: "assistant", content: text });
     }

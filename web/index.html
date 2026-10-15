@@ -74,13 +74,19 @@
         </div>
       </div>
 
+      <div class="modes" role="tablist" aria-label="Режим">
+        <span class="mode-ind" aria-hidden="true"></span>
+        <button class="mode active" type="button" role="tab" data-mode="ask"><span aria-hidden="true">💬</span><span data-i18n="mode_ask">Вопрос</span></button>
+        <button class="mode" type="button" role="tab" data-mode="situation"><span aria-hidden="true">🧭</span><span data-i18n="mode_situation">Моя ситуация</span></button>
+        <button class="mode" type="button" role="tab" data-mode="factcheck"><span aria-hidden="true">🔎</span><span data-i18n="mode_factcheck">Проверка факта</span></button>
+      </div>
       <form id="chat-form" class="composer" autocomplete="off">
         <div class="composer-inner">
           <button type="button" id="mic" class="round-btn mic" aria-label="Голосовой ввод">
             <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-2.08A7 7 0 0 0 19 12h-2Z"/></svg>
             <span class="wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
           </button>
-          <textarea id="input" rows="1" maxlength="1000" aria-label="Ваш вопрос" data-i18n-ph="placeholder" placeholder="Спросите о Конституции, ценностях, Посланиях…"></textarea>
+          <textarea id="input" rows="1" maxlength="1000" aria-label="Ваш вопрос" placeholder="Спросите о Конституции, ценностях, Посланиях…"></textarea>
           <button type="submit" id="send" class="send-btn" aria-label="Отправить">
             <svg class="i-send" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
             <svg class="i-stop" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>

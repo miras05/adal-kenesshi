@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS queries (
     channel     TEXT,          -- web | telegram
     lang        TEXT,
     question    TEXT,
+    mode        TEXT,          -- ask | situation | factcheck
     answered    INTEGER,       -- 1 = ответ найден, 0 = «нет информации»
     top_score   REAL,          -- лучшая близость в поиске
     latency_ms  INTEGER,
@@ -52,6 +53,10 @@ def conn() -> sqlite3.Connection:
         _conn = sqlite3.connect(config.DB_PATH, check_same_thread=False)
         _conn.row_factory = sqlite3.Row
         _conn.executescript(SCHEMA)
+        cols = {r[1] for r in _conn.execute("PRAGMA table_info(queries)")}
+        if "mode" not in cols:  # миграция БД, созданной до появления режимов
+            _conn.execute("ALTER TABLE queries ADD COLUMN mode TEXT")
+            _conn.commit()
     return _conn
 
 
@@ -119,6 +124,8 @@ def stats() -> dict:
             "SELECT lang, COUNT(*) AS n FROM queries GROUP BY lang ORDER BY n DESC")],
         "by_channel": [dict(r) for r in c.execute(
             "SELECT channel, COUNT(*) AS n FROM queries GROUP BY channel ORDER BY n DESC")],
+        "by_mode": [dict(r) for r in c.execute(
+            "SELECT COALESCE(mode, 'ask') AS mode, COUNT(*) AS n FROM queries GROUP BY 1 ORDER BY n DESC")],
         "by_day": [dict(r) for r in c.execute(
             "SELECT date(ts, 'unixepoch', '+5 hours') AS day, COUNT(*) AS n, SUM(answered) AS answered "
             "FROM queries GROUP BY day ORDER BY day DESC LIMIT 14")],

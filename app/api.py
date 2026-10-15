@@ -81,6 +81,7 @@ class ChatIn(BaseModel):
     question: str = Field(max_length=4000)
     history: list[Msg] = Field(default_factory=list, max_length=20)
     lang: Literal["ru", "kk"] | None = None
+    mode: Literal["ask", "situation", "factcheck"] = "ask"
 
 
 class FeedbackIn(BaseModel):
@@ -113,7 +114,7 @@ async def chat(body: ChatIn, request: Request):
     async def events():
         try:
             async for ev in service.answer(body.question, [m.model_dump() for m in body.history],
-                                           body.lang, channel=channel, user=user):
+                                           body.lang, channel=channel, user=user, mode=body.mode):
                 yield f"data: {json.dumps(ev, ensure_ascii=False)}\n\n"
         except Exception:  # непредвиденная ошибка — не роняем поток, сообщаем пользователю
             log.exception("chat failed")
