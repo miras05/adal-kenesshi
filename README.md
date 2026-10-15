@@ -8,6 +8,7 @@
 |---|---|
 | 🌐 Веб-демо | https://lushly-mongrel-spoof.ngrok-free.dev |
 | 🤖 Telegram | [@adal_kenesshi_bot](https://t.me/adal_kenesshi_bot) |
+| 🎞 Презентация | https://miras05.github.io/adal-kenesshi/ |
 | 📊 Аналитика | https://lushly-mongrel-spoof.ngrok-free.dev/admin (по токену) |
 
 ---
