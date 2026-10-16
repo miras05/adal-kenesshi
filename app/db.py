@@ -99,8 +99,9 @@ def save_quiz(user: str, nickname: str, score: int, total: int) -> None:
 
 def leaderboard(limit: int = 10) -> list[dict]:
     rows = conn().execute(
+        # одно имя — одна строка с лучшим результатом (даже если играли с разных устройств)
         "SELECT nickname, MAX(score) AS score, total FROM quiz_results "
-        "WHERE nickname != '' GROUP BY user_hash, nickname ORDER BY score DESC, MIN(ts) LIMIT ?", (limit,)
+        "WHERE nickname != '' GROUP BY lower(trim(nickname)) ORDER BY score DESC, MIN(ts) LIMIT ?", (limit,)
     ).fetchall()
     return [dict(r) for r in rows]
 

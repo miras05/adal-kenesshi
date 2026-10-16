@@ -175,6 +175,9 @@ main { flex: 1; display: flex; min-height: 0; min-width: 0; width: 100%; max-wid
 .panel.active { display: flex; animation: panel-in .5s var(--ease); }
 @keyframes panel-in { from { opacity: 0; transform: translateY(10px); } }
 .panel:not(#tab-chat) { overflow-y: auto; padding-bottom: 40px; }
+/* Содержимое вкладок не сжимается под высоту экрана — иначе .quiz (overflow: hidden)
+   обрезает результаты, и панели нечего прокручивать */
+.panel:not(#tab-chat) > * { flex-shrink: 0; }
 .panel-head { display: grid; gap: 8px; padding: 34px 0 22px; }
 .panel-head h2 { margin: 0; font: 600 clamp(22px, 3.4vw, 30px)/1.2 var(--f-display); letter-spacing: -.02em; text-wrap: balance; }
 .panel-head p:last-child { margin: 0; color: var(--muted); max-width: 62ch; }
