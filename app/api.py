@@ -60,6 +60,10 @@ async def security_headers(request: Request, call_next):
     resp.headers["X-Frame-Options"] = "DENY"
     resp.headers["Referrer-Policy"] = "no-referrer"
     resp.headers["Permissions-Policy"] = "microphone=(self), camera=(), geolocation=()"
+    # Страницы и статика: браузер всегда сверяется с сервером (по ETag), чтобы после
+    # обновления сайта не показывать старые стили и скрипты из кэша
+    if request.url.path in ("/", "/admin") or request.url.path.startswith("/static/"):
+        resp.headers["Cache-Control"] = "no-cache"
     return resp
 
 

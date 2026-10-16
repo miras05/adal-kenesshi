@@ -421,7 +421,7 @@ main { flex: 1; display: flex; min-height: 0; min-width: 0; width: 100%; max-wid
 .ask-btn:hover { transform: translateX(3px); }
 
 /* ---------- Квиз ---------- */
-.quiz { position: relative; overflow: hidden; padding: 26px; border-radius: 26px; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow-lg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
+.quiz { position: relative; padding: 26px; border-radius: 26px; background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow-lg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); }
 .quiz-intro { display: grid; justify-items: center; text-align: center; gap: 14px; padding: 18px 0; }
 .quiz-intro .big { width: 92px; height: 92px; animation: float 4s ease-in-out infinite; }
 .quiz-intro p { margin: 0; color: var(--muted); max-width: 46ch; }
