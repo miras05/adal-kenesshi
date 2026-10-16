@@ -1,3 +1,4 @@
+[hidden] { display: none !important; }
 .admin { flex-direction: column; padding: 20px 16px 40px; overflow-y: auto; display: block; }
 .login { max-width: 380px; margin: 40px auto; display: grid; gap: 10px; }
 .login input { padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font: inherit; }

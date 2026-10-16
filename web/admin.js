@@ -38,11 +38,13 @@ function render(s) {
 
   const rows = (arr, key) => {
     const total = arr.reduce((a, x) => a + x.n, 0) || 1;
-    return arr.map((x) => `<div class="row"><span style="min-width:70px">${esc(x[key] || "—")}</span>
+    return arr.map((x) => `<div class="row"><span style="min-width:150px">${esc(x[key] || "—")}</span>
       <div class="track"><div class="fill" style="width:${(x.n / total) * 100}%"></div></div><b>${x.n}</b></div>`).join("") || "<p>—</p>";
   };
   $("#by-lang").innerHTML = rows(s.by_lang.map((x) => ({ ...x, lang: x.lang === "kk" ? "қазақша" : "русский" })), "lang");
   $("#by-channel").innerHTML = rows(s.by_channel, "channel");
+  const MODES = { ask: "💬 Вопрос", situation: "🧭 Моя ситуация", factcheck: "🔎 Проверка факта" };
+  $("#by-mode").innerHTML = rows((s.by_mode || []).map((x) => ({ ...x, mode: MODES[x.mode] || x.mode })), "mode");
   $("#top").innerHTML = s.top_questions.map((q) => `<li>${esc(q.question)} <b>×${q.n}</b></li>`).join("") || "<li>—</li>";
   $("#unanswered").innerHTML = s.unanswered.map((q) => `<li>${esc(q.question)} <small>(${esc(q.at)})</small></li>`).join("") || "<li>Все вопросы получили ответ 🎉</li>";
 }
