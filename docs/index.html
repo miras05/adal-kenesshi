@@ -210,6 +210,36 @@ b, strong { font-weight: 700; }
 .stack .val { font: 600 26px/1.3 var(--display); margin-top: 10px; }
 .stack .val small { display: block; font: 500 18px/1.4 var(--body); color: var(--muted); margin-top: 8px; }
 
+
+/* ---------- архитектура ---------- */
+.arch { display: grid; grid-template-columns: 290px 64px minmax(0, 1fr) 64px 330px; align-items: stretch; margin-top: 34px; }
+.arch-col { display: flex; flex-direction: column; gap: 14px; justify-content: center; }
+.arch-lbl { font-size: 14px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--sky2); margin-bottom: 2px; }
+.abox { padding: 16px 18px; border-radius: 18px; background: var(--card-solid); border: 1px solid var(--line2); }
+.abox h3 { margin: 0; font: 600 20px/1.25 var(--display); display: flex; align-items: center; gap: 10px; }
+.abox p { margin: 6px 0 0; font-size: 15.5px; color: var(--muted); line-height: 1.4; }
+.abox.gold { border-color: rgba(255, 201, 61, .5); box-shadow: 0 0 0 5px var(--gold-soft); }
+.core-box { padding: 18px 20px; border-radius: 22px; background: linear-gradient(160deg, rgba(51, 200, 230, .14), rgba(16, 44, 56, .7)); border: 1px solid rgba(51, 200, 230, .4); display: flex; flex-direction: column; justify-content: center; gap: 12px; }
+.core-box > h3 { margin: 0; font: 600 22px var(--display); display: flex; justify-content: space-between; align-items: baseline; }
+.core-box > h3 small { font: 500 15px var(--body); color: var(--muted); }
+.mods { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mod { padding: 10px 12px; border-radius: 12px; background: rgba(6, 24, 32, .55); border: 1px solid var(--line); font-size: 15px; color: var(--muted); line-height: 1.35; }
+.mod b { display: block; font-family: ui-monospace, Menlo, monospace; font-size: 14.5px; color: var(--gold2); font-weight: 600; margin-bottom: 2px; }
+.mod.wide { grid-column: 1 / -1; background: rgba(255, 201, 61, .08); border-color: rgba(255, 201, 61, .35); }
+.arrow { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; color: var(--sky2); }
+.arrow svg { width: 64px; height: 24px; overflow: visible; }
+.arrow path { fill: none; stroke: url(#arr); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 6 6; animation: dash 1.2s linear infinite; }
+.arrow small { font-size: 12.5px; font-weight: 700; letter-spacing: .06em; color: var(--dim); text-transform: uppercase; }
+@keyframes dash { to { stroke-dashoffset: -24; } }
+.build { margin-top: 26px; padding: 18px 22px; border-radius: 22px; background: var(--card); border: 1px solid var(--line); }
+.build-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+.build-head b { font: 600 20px var(--display); color: var(--gold); }
+.build-head span { font-size: 15px; color: var(--muted); }
+.bsteps { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; counter-reset: b; }
+.bstep { position: relative; padding: 12px 12px 12px 46px; border-radius: 14px; background: rgba(6, 24, 32, .5); border: 1px solid var(--line); font-size: 15px; line-height: 1.35; color: var(--muted); }
+.bstep::before { counter-increment: b; content: counter(b); position: absolute; left: 12px; top: 12px; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; background: var(--gold); color: #2A1F00; font-weight: 800; font-size: 13px; }
+.bstep b { display: block; color: var(--text); font-size: 15.5px; margin-bottom: 2px; }
+
 /* ---------- 14. польза ---------- */
 .impact { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 46px; }
 .impact .card { padding: 28px 24px; }
@@ -247,6 +277,7 @@ b, strong { font-weight: 700; }
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <linearGradient id="arr" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#33C8E6"/><stop offset="1" stop-color="#FFC93D"/></linearGradient>
   <linearGradient id="shg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#00A3C4"/><stop offset=".55" stop-color="#2BC0DE"/><stop offset="1" stop-color="#F5B800"/></linearGradient>
 </defs></svg>
 
@@ -466,6 +497,48 @@ b, strong { font-weight: 700; }
     </div>
   </section>
 
+  <!-- Архитектура -->
+  <section class="slide" data-notes="Архитектура. Слева — как пользователь приходит: сайт или Telegram, оба обращаются к одному серверу. В центре — наш сервер на FastAPI: проверка запроса, гибридный поиск, правила для нейросети, вызов Claude и проверка ответа. Справа — нейросеть Claude, поисковый индекс и база SQLite. Внизу — как мы его создавали: собрали официальные документы, нарезали по статьям, построили индекс, написали конвейер RAG, сделали интерфейсы и проверили качество на 47 вопросах.">
+    <p class="eyebrow in" style="--d:0">Архитектура</p>
+    <h2 class="in" style="--d:1;font-size:50px">Как устроен и <span class="grad">как мы его создавали</span></h2>
+    <div class="arch">
+      <div class="arch-col">
+        <span class="arch-lbl in" style="--d:2">Пользователь</span>
+        <div class="abox in" style="--d:2"><h3>🌐 Сайт</h3><p>HTML + JS, ответ печатается потоком (SSE), голос, квиз</p></div>
+        <div class="abox in" style="--d:3"><h3>🤖 Telegram</h3><p>aiogram 3 · тот же API, что и сайт</p></div>
+      </div>
+      <div class="arrow in" style="--d:4"><svg viewBox="0 0 64 24"><path d="M2 12H58M50 4l8 8-8 8"/></svg><small>HTTPS</small></div>
+      <div class="core-box in" style="--d:4">
+        <h3>⚙️ Сервер FastAPI <small>Python 3.12</small></h3>
+        <div class="mods">
+          <div class="mod"><b>api.py</b>валидация, лимиты, CSP</div>
+          <div class="mod"><b>retriever.py</b>поиск: смысл (e5) + слова (BM25)</div>
+          <div class="mod"><b>prompts.py</b>правила: только документы, ссылки</div>
+          <div class="mod"><b>llm.py</b>вызов Claude, ошибки, стриминг</div>
+          <div class="mod wide"><b>service.py — конвейер ответа</b>вопрос → поиск → порог «нет данных» → Claude → цитаты, печать 📜, вердикт → журнал</div>
+        </div>
+      </div>
+      <div class="arrow in" style="--d:5"><svg viewBox="0 0 64 24"><path d="M2 12H58M50 4l8 8-8 8"/></svg><small>API</small></div>
+      <div class="arch-col">
+        <span class="arch-lbl in" style="--d:5">AI и данные</span>
+        <div class="abox gold in" style="--d:5"><h3>✨ Claude API</h3><p>Anthropic · пишет ответ только по найденным фрагментам</p></div>
+        <div class="abox in" style="--d:6"><h3>🔍 Индекс</h3><p>2645 фрагментов · векторы multilingual-e5 (локально)</p></div>
+        <div class="abox in" style="--d:7"><h3>🗄️ SQLite</h3><p>журнал без персональных данных, отзывы, квиз</p></div>
+      </div>
+    </div>
+    <div class="build in" style="--d:8">
+      <div class="build-head"><b>Как мы его создавали</b><span>от документов к измеренному качеству</span></div>
+      <div class="bsteps">
+        <div class="bstep"><b>Сбор</b>akorda.kz и «Әділет», только действующие акты</div>
+        <div class="bstep"><b>Нарезка</b>Конституция и законы — по статьям</div>
+        <div class="bstep"><b>Индекс</b>векторы e5 для поиска по смыслу</div>
+        <div class="bstep"><b>Конвейер RAG</b>поиск, порог, промпты, проверка</div>
+        <div class="bstep"><b>Интерфейсы</b>сайт, Telegram, режимы, квиз</div>
+        <div class="bstep"><b>Проверка</b>46 тестов, 47 вопросов, 98%</div>
+      </div>
+    </div>
+  </section>
+
   <!-- 14 -->
   <section class="slide" data-notes="Кому это полезно: гражданам — понять свои права и куда обратиться; школам и вузам — изучать Конституцию и ценности; госслужащим — этика и антикоррупционные ограничения; Центру «Адал қоғам» — аналитика того, что людям непонятно. Дальше: интеграция с eGov и 1414, новые законы, голос в Telegram.">
     <p class="eyebrow in" style="--d:0">Польза для общества</p>
@@ -495,7 +568,7 @@ b, strong { font-weight: 700; }
 </div></div>
 
 <div class="brand-mini"><span class="shanyrak-slot"></span>Адал Кеңесші</div>
-<div class="nav"><button id="prev" aria-label="Назад">←</button><span class="count" id="count">1 / 15</span><button id="next" aria-label="Вперёд">→</button><button id="fs" aria-label="Полный экран">⛶</button></div>
+<div class="nav"><button id="prev" aria-label="Назад">←</button><span class="count" id="count">1 / 16</span><button id="next" aria-label="Вперёд">→</button><button id="fs" aria-label="Полный экран">⛶</button></div>
 <div class="hint" id="hint">← → / пробел — листать · F — полный экран · N — заметки</div>
 <div class="notes" id="notes" hidden></div>
 
